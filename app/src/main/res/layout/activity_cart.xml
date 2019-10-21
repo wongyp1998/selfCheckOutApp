@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".CartActivity"
+    android:clipChildren="false">
+
+
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/top_label"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:background="@color/red"-->
+
+
+<!--        >-->
+
+
+<!--        <androidx.appcompat.widget.AppCompatImageButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_arrow_back_ios_24px"-->
+
+
+<!--            />-->
+
+
+
+<!--    </RelativeLayout>-->
+
+    <include
+        android:id="@+id/cart_app_bar"
+        layout="@layout/cart_toolbar" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cart_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btmlayout"
+        android:layout_below="@+id/cart_app_bar"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="-1dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="You haven't added anything to your cart!"
+        android:textColor="@color/red">
+
+    </TextView>
+
+    <RelativeLayout
+        android:id="@+id/btmlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="15dp"
+
+        >
+
+        <TextView
+            android:id="@+id/total_label"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="8dp"
+            android:text="TOTAL"
+            android:textColor="#D3D3D3"
+            android:textSize="15dp"
+            >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/cart_total_price"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/total_label"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            >
+
+        </TextView>
+
+        <Button
+        android:id="@+id/checkOutButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="30dp"
+        android:backgroundTint="@color/red"
+        android:text="@string/checkout"
+        android:textColor="@color/white"
+        app:cornerRadius="25dp"
+        app:iconTint="@null"
+        app:icon="@drawable/ic_keyboard_arrow_right_24px"
+        app:iconGravity="end"
+        app:iconPadding="8dp"
+        app:iconSize="25dp" />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

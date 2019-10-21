@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_above="@+id/home_recybleview"
+        android:layout_margin="20dp"
+        android:background="@drawable/home_background_border">
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan Barcode In Store"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginTop="25dp"
+            android:textSize="20dp"
+            >
+
+        </TextView>
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text1"
+            android:text="so you can do a self checkout"
+            android:textColor="@color/red"
+            android:textAlignment="center"
+            android:layout_marginTop="3dp"
+            android:textSize="20dp">
+
+        </TextView>
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text2"
+            android:text="at our physical store"
+            android:textColor="@color/red"
+            android:textAlignment="center"
+            android:layout_marginTop="3dp"
+            android:textSize="20dp">
+
+        </TextView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/barcode_scan_pic_foreground"
+            android:layout_below="@+id/text3"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp">
+
+
+        </androidx.appcompat.widget.AppCompatImageView>
+
+
+        <Button
+            android:id="@+id/checkOutButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="30dp"
+            android:backgroundTint="@color/red"
+            android:text="SCAN NOW"
+            android:textColor="@color/white"
+            app:cornerRadius="25dp"
+            app:iconTint="@null"
+            app:icon="@drawable/ic_barcode"
+            app:iconGravity="end"
+            app:iconPadding="8dp"
+            app:iconSize="25dp" />
+
+
+
+    </RelativeLayout>
+
+
+    <include
+        android:id="@+id/home_recybleview"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        layout="@layout/promotion_scroll_layout"
+        android:layout_above="@+id/space">
+
+    </include>
+
+
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        app:active_item_color="@color/white"
+        app:centre_button_color="@color/white"
+        app:inactive_item_color="@color/black"
+        app:active_centre_button_icon_color="@color/white"
+        app:inactive_centre_button_icon_color="@color/black"
+        app:active_centre_button_background_color="@color/black"
+        app:space_background_color="@color/red"
+        app:centre_button_icon="@drawable/ic_barcode"
+        app:space_item_icon_size="@dimen/space_item_icon_default_size"
+        app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
+        app:space_item_text_size="@dimen/space_item_text_default_size" />
+
+
+</RelativeLayout>

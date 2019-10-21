@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/barcode_bottom_sheet_padding_vertical"
+    android:paddingBottom="@dimen/barcode_bottom_sheet_padding_vertical"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_gravity="center"
+      >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/product_image"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+
+         />
+
+
+  </LinearLayout>
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/barcode_field_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="260dp"
+      android:scrollbars="vertical" />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_gravity="right"
+      android:layout_marginRight="15dp"
+    >
+
+    <TextView
+        android:id="@+id/quantity_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="@string/product_quantity"
+        android:textColor="@color/red"
+        android:textSize="16dp" />
+
+    <TextView
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+      />
+
+    <com.travijuu.numberpicker.library.NumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:custom_layout="@layout/number_picker_custom_layout"
+        app:focusable="false"
+        app:max="10"
+        app:min="1"
+        app:unit="1"
+        app:value="-5" />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center"
+      android:layout_marginTop="20dp">
+
+    <Button
+        android:id="@+id/addCartButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/red"
+        android:text="@string/add_to_cart"
+        android:textColor="@color/white"
+        app:cornerRadius="25dp"
+        app:icon="@drawable/ic_shopping_cart_black_24dp"
+        app:iconSize="15dp"/>
+
+  </LinearLayout>
+
+
+</LinearLayout>
