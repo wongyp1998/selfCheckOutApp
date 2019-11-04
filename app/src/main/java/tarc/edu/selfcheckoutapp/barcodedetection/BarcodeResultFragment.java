@@ -16,11 +16,14 @@
 
 package tarc.edu.selfcheckoutapp.barcodedetection;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,16 +41,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import tarc.edu.selfcheckoutapp.R;
-import tarc.edu.selfcheckoutapp.CartActivity;
 import tarc.edu.selfcheckoutapp.LiveBarcodeScanningActivity;
 import tarc.edu.selfcheckoutapp.Product;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel.WorkflowState;
+
+import com.luseen.spacenavigation.SpaceNavigationView;
 import com.squareup.picasso.Picasso;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -68,9 +75,9 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
   private Button addToCartButton;
   private NumberPicker numberPicker;
   public static final String SHARED_PREFS = "sharedPrefs";
-  public static final String TEXT = "text";
   public static CircleImageView circleImageView;
-  private FirebaseFirestore mFireStore;
+  SpaceNavigationView navigationView;
+  final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
   private String pname;
   private String pbarcode;
   private String pprice;
@@ -113,6 +120,7 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
     Bundle arguments = getArguments();
 
     circleImageView = (CircleImageView) view.findViewById(R.id.product_image);
+    navigationView = (SpaceNavigationView)((Activity)getActivity()).findViewById(R.id.space);
 
     pimage =((LiveBarcodeScanningActivity)getActivity()).productimage;
     Picasso.get().load(pimage).into(circleImageView);
@@ -152,8 +160,7 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
       public void onClick(View v) {
         addingToCartList();
 
-        Intent intent = new Intent(getActivity(), CartActivity.class);
-        startActivity(intent);
+
       }
     });
 
@@ -210,6 +217,8 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
               public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
                 {
+//                  Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
+//                  dismiss();
                   cartListRef.child("Admin View").child("013-6067208")
                           .child("Products").child(pbarcode)
                           .updateChildren(cartMap)
@@ -219,6 +228,7 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
                               if(task.isSuccessful())
                               {
                                 Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
+                                dismiss();
                               }
                             }
                           });
@@ -227,4 +237,5 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
               }
             });
   }
+
 }

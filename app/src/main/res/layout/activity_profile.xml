@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/text_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Profile"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        >
+
+    </TextView>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_below="@+id/text_profile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_student"
+
+            >
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+
+    <LinearLayout
+        android:id="@+id/profile_linear2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_profile"
+        android:layout_toRightOf="@+id/profile_image"
+        android:layout_margin="20dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YP Wong"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/profile_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="wongyp1998@gmail.com"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"
+            android:textSize="18dp"
+            >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/profile_hp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="013-6067208"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"
+            android:textSize="18dp"
+            >
+
+        </TextView>
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@color/lighter_grey"
+        android:layout_below="@+id/profile_image"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"/>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_card"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp"
+        app:cardCornerRadius="5dp"
+        app:cardBackgroundColor="@color/white"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/tsc_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Transaction History"
+            android:textAllCaps="false"
+            android:textSize="16dp"
+            android:backgroundTint="@color/white"
+            app:icon="@drawable/ic_profile_arrow_right"
+            app:iconGravity="end"
+            app:iconSize="25dp"
+            app:iconTint="@color/black"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+
+            >
+
+        </Button>
+
+        <Button
+            android:id="@+id/cards_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Cards"
+            android:textAllCaps="false"
+            android:textSize="16dp"
+            android:backgroundTint="@color/white"
+            android:layout_below="@+id/tsc_btn"
+            app:icon="@drawable/ic_profile_arrow_right"
+            android:layout_marginTop="5dp"
+            app:iconGravity="end"
+            app:iconSize="25dp"
+            app:iconTint="@color/black"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+
+            >
+
+        </Button>
+
+        <Button
+            android:id="@+id/voucher_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Voucher"
+            android:textAllCaps="false"
+            android:textSize="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/cards_btn"
+            android:backgroundTint="@color/white"
+            app:icon="@drawable/ic_profile_arrow_right"
+            app:iconGravity="end"
+            app:iconSize="25dp"
+            app:iconTint="@color/black"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+
+            >
+
+        </Button>
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

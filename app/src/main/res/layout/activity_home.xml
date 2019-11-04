@@ -8,4 +8,31 @@
     android:background="@color/white"
     android:id="@+id/container">
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/space">
+    </FrameLayout>
+
+
+
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        app:active_item_color="@color/white"
+        app:centre_button_color="@color/white"
+        app:inactive_item_color="@color/black"
+        app:active_centre_button_icon_color="@color/white"
+        app:inactive_centre_button_icon_color="@color/black"
+        app:active_centre_button_background_color="@color/black"
+        app:space_background_color="@color/red"
+        app:centre_button_icon="@drawable/ic_barcode"
+        app:space_item_icon_size="@dimen/space_item_icon_default_size"
+        app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
+        app:space_item_text_size="@dimen/space_item_text_default_size" />
+
 </RelativeLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white"
+    android:layout_margin="15dp"
+    app:cardElevation="15dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/white">
+
+
+
+
+        <TextView
+            android:id="@+id/tsc_id"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Transaction ID"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tsc_date"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Date"
+            android:layout_below="@id/tsc_id"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tsc_time"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Time"
+            android:layout_toRightOf="@id/tsc_date"
+            android:layout_below="@id/tsc_id"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/tsc_total"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:text="Amount"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_toLeftOf="@+id/arrow_img"
+            >
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/arrow_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/ic_profile_arrow_right"
+            android:layout_marginRight="5dp"
+            android:scaleType="fitXY"
+
+            >
+        </ImageView>
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

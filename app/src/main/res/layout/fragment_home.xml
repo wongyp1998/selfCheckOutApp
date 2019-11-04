@@ -6,10 +6,44 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hi, YP Wong"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:layout_margin="20dp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome to XXX"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="25dp">
+                </TextView>
+            </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_above="@+id/home_recybleview"
+        android:layout_above="@+id/promo_list"
         android:layout_margin="20dp"
         android:background="@drawable/home_background_border">
 
@@ -86,33 +120,47 @@
     </RelativeLayout>
 
 
-    <include
-        android:id="@+id/home_recybleview"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/promo_list"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
-        layout="@layout/promotion_scroll_layout"
-        android:layout_above="@+id/space">
+        android:layout_height="wrap_content">
 
-    </include>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today's Special"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/black"
+
+            />
+
+        <Button
+            android:id="@+id/see_all_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MORE"
+            style="@style/AppTheme.Button"
+            android:textColor="@color/red"
+            android:backgroundTint="@color/white"
+            android:layout_alignParentRight="true"/>
 
 
-    <com.luseen.spacenavigation.SpaceNavigationView
-        android:id="@+id/space"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        app:active_item_color="@color/white"
-        app:centre_button_color="@color/white"
-        app:inactive_item_color="@color/black"
-        app:active_centre_button_icon_color="@color/white"
-        app:inactive_centre_button_icon_color="@color/black"
-        app:active_centre_button_background_color="@color/black"
-        app:space_background_color="@color/red"
-        app:centre_button_icon="@drawable/ic_barcode"
-        app:space_item_icon_size="@dimen/space_item_icon_default_size"
-        app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
-        app:space_item_text_size="@dimen/space_item_text_default_size" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/promo_scroll_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            android:layout_below="@+id/see_all_btn" />
+
+    </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </RelativeLayout>

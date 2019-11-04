@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@null"
+    android:gravity="center">
+
+
+
+
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_1"
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            app:cardBackgroundColor="@color/white"
+            android:background="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:cardCornerRadius="10dp"
+            android:elevation="0dp"
+
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Thank you !"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="35dp"
+                    android:textSize="20dp"
+                    >
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Your transaction was successful"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+
+                    >
+                </TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="DATE"
+                        android:textColor="@color/grey"
+                        android:layout_marginLeft="30dp"
+                        >
+
+                    </TextView>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="TIME"
+                        android:textColor="@color/grey"
+                        android:textAlignment="textEnd"
+                        android:layout_marginRight="30dp"
+                        >
+
+                    </TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginTop="2dp">
+
+                    <TextView
+                        android:id="@+id/transaction_date"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="20 JUN 2019"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:layout_marginLeft="30dp"
+                        >
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/transaction_time"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="12:30 PM"
+                        android:textColor="@color/black"
+                        android:textAlignment="textEnd"
+                        android:textSize="17dp"
+                        android:layout_marginRight="30dp"
+                        >
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TOTAL AMOUNT"
+                        android:textColor="@color/grey"
+                        android:layout_marginTop="20dp"
+                        android:textAlignment="center"
+                        >
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
+
+                    <TextView
+                        android:id="@+id/transaction_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RM 130.20"
+                        android:textColor="@color/red"
+                        android:textSize="22dp"
+                        android:textAlignment="center"
+                        >
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/view_receipt_btn"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/red"
+                        android:text="VIEW RECEIPT"
+                        android:textColor="@color/white"
+                        app:cornerRadius="20dp"
+                        app:iconTint="@null"
+                        app:icon="@drawable/ic_keyboard_arrow_right_24px"
+                        app:iconGravity="end"
+                        app:iconPadding="8dp"
+                        app:iconSize="25dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:cardCornerRadius="40dp"
+                android:layout_centerHorizontal="true"
+                app:cardBackgroundColor="@color/white"
+                >
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_checked"
+                    android:scaleType="centerCrop"
+                    >
+                </ImageView>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+    
+
+</RelativeLayout>

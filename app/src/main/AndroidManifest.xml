@@ -4,23 +4,29 @@
     package="tarc.edu.selfcheckoutapp"
     android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="false"
         android:icon="@drawable/logo_mlkit"
-        android:label="@string/app_name"
+        android:label="fyp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup,android:icon">
-<!--        <activity-->
-<!--            android:name=".java.NavDrawerActivity"-->
-<!--            android:label="@string/title_activity_nav_drawer"-->
-<!--            android:theme="@style/AppTheme.NoActionBar"></activity>-->
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ViewReceiptActivity" />
+        <activity android:name=".TransactionSuccessfulActicity" />
+        <activity android:name=".SummaryReviewActivity" />
+        <activity android:name=".CheckoutActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -37,13 +43,23 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TransactionHistoryActivity"></activity>
+        <activity
             android:name=".LiveBarcodeScanningActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".CartActivity"
-            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"

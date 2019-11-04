@@ -16,14 +16,21 @@
 
 package tarc.edu.selfcheckoutapp;
 
+import android.Manifest;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +42,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.common.base.Objects;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,11 +69,16 @@ import tarc.edu.selfcheckoutapp.camera.CameraSourcePreview;
 import tarc.edu.selfcheckoutapp.settings.SettingsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.luseen.spacenavigation.SpaceNavigationView;
 import com.travijuu.numberpicker.library.NumberPicker;
+import tarc.edu.selfcheckoutapp.MainActivity;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -84,11 +103,13 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
   public static final String TEXT = "text";
   public static final String SWITCH = "switch1";
   public static String productimage;
+  public static final int REQUEST_ID_MULTIPLE_PERMISSIONS= 7;
 
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    checkAndroidVersion();
 
     setContentView(R.layout.activity_live_barcode);
     mFireStore = FirebaseFirestore.getInstance();
@@ -268,7 +289,7 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
                               SharedPreferences.Editor editor = sharedPreferences.edit();
                               ArrayList<BarcodeField> barcodeFieldList = new ArrayList<>();
                               productimage = product.getImage();
-                              String price = "RM " + String.valueOf(product.getPrice());
+                              String price = "RM " + String.valueOf(Float.parseFloat(product.getPrice()));
                               barcodeFieldList.add(new BarcodeField("Barcode Value", barcode.getRawValue()));
                               barcodeFieldList.add(new BarcodeField("Item Name", product.getProdName()));
                               barcodeFieldList.add(new BarcodeField("Weight", product.getWeight()));
@@ -280,16 +301,9 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
                               editor.commit();
                               BarcodeResultFragment.show(getSupportFragmentManager(), barcodeFieldList);
 
-//                              View view = layoutInflater.inflate(R.layout.barcode_bottom_sheet, null);
-//
-//                                  addToCartButton = view.findViewById(R.id.addCartButton);
-//
-//                                  addToCartButton.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                      Toast.makeText(getApplicationContext(),"Hello World",Toast.LENGTH_SHORT).show();
-//                                    }
-//                                  });
+
+
+
 
                             }
                             else {
@@ -312,5 +326,106 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
           }
         });
   }
+
+  private void checkAndroidVersion() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      checkAndRequestPermissions();
+
+    } else {
+      // code for lollipop and pre-lollipop devices
+    }
+
+  }
+
+
+  private boolean checkAndRequestPermissions() {
+    int camera = ContextCompat.checkSelfPermission(LiveBarcodeScanningActivity.this,
+            Manifest.permission.CAMERA);
+    int wtite = ContextCompat.checkSelfPermission(LiveBarcodeScanningActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    int read = ContextCompat.checkSelfPermission(LiveBarcodeScanningActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+    List<String> listPermissionsNeeded = new ArrayList<>();
+    if (wtite != PackageManager.PERMISSION_GRANTED) {
+      listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+    if (camera != PackageManager.PERMISSION_GRANTED) {
+      listPermissionsNeeded.add(Manifest.permission.CAMERA);
+    }
+    if (read != PackageManager.PERMISSION_GRANTED) {
+      listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+    if (!listPermissionsNeeded.isEmpty()) {
+      ActivityCompat.requestPermissions(LiveBarcodeScanningActivity.this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+      return false;
+    }
+    return true;
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         String permissions[], int[] grantResults) {
+    Log.d("in fragment on request", "Permission callback called-------");
+    switch (requestCode) {
+      case REQUEST_ID_MULTIPLE_PERMISSIONS: {
+
+        Map<String, Integer> perms = new HashMap<>();
+        // Initialize the map with both permissions
+        perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+        perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
+        perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+        // Fill with actual results from user
+        if (grantResults.length > 0) {
+          for (int i = 0; i < permissions.length; i++)
+            perms.put(permissions[i], grantResults[i]);
+          // Check for both permissions
+          if (perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                  && perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("in fragment on request", "CAMERA & WRITE_EXTERNAL_STORAGE READ_EXTERNAL_STORAGE permission granted");
+            // process the normal flow
+            //else any one or both the permissions are not granted
+          } else {
+            Log.d("in fragment on request", "Some permissions are not granted ask again ");
+            //permission is denied (this is the first time, when "never ask again" is not checked) so ask again explaining the usage of permission
+//                        // shouldShowRequestPermissionRationale will return true
+            //show the dialog or snackbar saying its necessary and try again otherwise proceed with setup.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LiveBarcodeScanningActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(LiveBarcodeScanningActivity.this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(LiveBarcodeScanningActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+              showDialogOK("Camera and Storage Permission required for this app",
+                      new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                          switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                              checkAndRequestPermissions();
+                              break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                              // proceed with logic by disabling the related features or quit the app.
+                              break;
+                          }
+                        }
+                      });
+            }
+            //permission is denied (and never ask again is  checked)
+            //shouldShowRequestPermissionRationale will return false
+            else {
+              Toast.makeText(LiveBarcodeScanningActivity.this, "Go to settings and enable permissions", Toast.LENGTH_LONG)
+                      .show();
+              //                            //proceed with logic by disabling the related features or quit the app.
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  private void showDialogOK(String message, DialogInterface.OnClickListener okListener) {
+    new AlertDialog.Builder(LiveBarcodeScanningActivity.this)
+            .setMessage(message)
+            .setPositiveButton("OK", okListener)
+            .setNegativeButton("Cancel", okListener)
+            .create()
+            .show();
+  }
+
 
 }

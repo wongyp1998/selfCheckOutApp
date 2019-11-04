@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/pname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
+        android:layout_weight="1.5"
+        android:textSize="12dp"
+
+        >
+    </TextView>
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:text="Qty"
+        android:textColor="@color/grey"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:gravity="start"
+
+        >
+
+    </TextView>
+    <TextView
+        android:id="@+id/pprice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unit Price"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="12dp"
+
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/ptotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="12dp"
+
+        >
+    </TextView>
+
+
+
+
+</LinearLayout>

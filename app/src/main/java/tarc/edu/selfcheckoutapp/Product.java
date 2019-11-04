@@ -5,8 +5,8 @@ public class Product {
     String prodName;
     String image;
     String weight;
-    float price;
-    float discount;
+    String price;
+    String discount;
 
     public Product() {
 
@@ -24,28 +24,8 @@ public class Product {
         return prodName;
     }
 
-    public float getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(float discount) {
-        this.discount = discount;
-    }
-
     public void setProdName(String prodName) {
         this.prodName = prodName;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
     }
 
     public String getImage() {
@@ -56,8 +36,28 @@ public class Product {
         this.image = image;
     }
 
-    public void setPrice(float price) {
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
     }
 }
 
