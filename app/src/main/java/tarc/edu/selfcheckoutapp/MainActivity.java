@@ -16,6 +16,8 @@ import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import tarc.edu.selfcheckoutapp.ui.Home.HomeFragment;
+import tarc.edu.selfcheckoutapp.ui.Home.LoginFragment;
+import tarc.edu.selfcheckoutapp.ui.Home.ProductFragment;
 
 
 /** Entry activity to select the detection mode. */
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
             break;
           case 1:
-            Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProductFragment()).commit();
             break;
           case 2:
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
             break;
           case 1:
-            Toast.makeText(MainActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProductFragment()).commit();
             break;
           case 2:
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();

@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="false"
@@ -21,13 +23,26 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:allowBackup,android:icon">
-        <activity android:name=".RegisterActivity" />
+        tools:replace="android:allowBackup,android:icon,android:label">
+        <activity android:name=".PinVerificationActivity"></activity>
+        <activity android:name=".SetTransactionPinActivity" />
+        <activity android:name=".OTPActivity" />
+        <activity android:name=".SelectPaymentActivity" />
+        <activity android:name=".WalletTopUpActivity" />
+        <activity android:name=".eWalletActivity" />
+        <activity android:name=".ViewMapActivity" />
+        <activity android:name=".ProductDetailsActivity" />
         <activity android:name=".ViewReceiptActivity" />
         <activity android:name=".TransactionSuccessfulActicity" />
         <activity android:name=".SummaryReviewActivity" />
-        <activity android:name=".CheckoutActivity" />
 
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -54,7 +69,7 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".TransactionHistoryActivity"></activity>
+        <activity android:name=".TransactionHistoryActivity" />
         <activity
             android:name=".LiveBarcodeScanningActivity"
             android:exported="false"
@@ -66,6 +81,10 @@
             android:label="@string/settings_title"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
+
+        <meta-data
+            android:name="sendotp.key"
+            android:value="@string/sendotp_key" />
     </application>
 
 </manifest>

@@ -13,7 +13,9 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -41,6 +43,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -54,12 +57,10 @@ public class ViewReceiptActivity extends AppCompatActivity {
     private TextView txtReceiptSub, txtReceiptDisc, txtReceiptTotal;
     private Bitmap bitmap, bitmap2;
     private Button btn,btn1;
-    private float rSubtotal,rDiscount,rTotal;
     private String transactionID;
     private String TAG ="GenerateQrCode";
     private ImageView qrImg;
     QRGEncoder qrgEncoder;
-    String test;
 
 
 
@@ -73,9 +74,16 @@ public class ViewReceiptActivity extends AppCompatActivity {
         llScroll = findViewById(R.id.llScroll);
 
 
+        if(Build.VERSION.SDK_INT>=24){
+            try{
+                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                m.invoke(null);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
-//        Intent ii = getIntent();
-//        Bundle b = ii.getExtras();
+
 
 
 
@@ -98,7 +106,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
                 Double Subtotal = dataSnapshot.child("subtotal").getValue(Double.class);
                 Double Total = dataSnapshot.child("total").getValue(Double.class);
                 String Discount = dataSnapshot.child("discountValue").getValue(String.class);
-//                Double discValue = 100.0;
+
 
                 txtReceiptSub.setText(String.format("%.2f",Subtotal));
                 txtReceiptDisc.setText(Discount);

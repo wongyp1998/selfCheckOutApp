@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".eWalletActivity"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/wallet_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/red"
+        android:elevation="5dp"
+
+        >
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <TextView
+        android:id="@+id/screen_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Wallet"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_margin="15dp"
+        android:layout_below="@id/wallet_toolbar">
+
+    </TextView>
+
+
+    <RelativeLayout
+        android:id="@+id/balance_layout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@+id/wallet_toolbar"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/wallet_balance_background">
+
+
+        <TextView
+            android:id="@+id/blc_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:layout_marginTop="10dp"
+            android:text="Your Balance"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textAlignment="center">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/currency_label"
+            android:layout_below="@id/blc_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginTop="5dp"
+            android:text="RM"
+
+            android:textColor="@color/white"
+            android:textAlignment="center">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/blc_amount"
+            android:layout_below="@id/currency_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:layout_marginTop="5dp"
+            android:text="0.00"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textAlignment="center">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/blc_amount"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+
+        <Button
+            android:id="@+id/btn_topup"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Top UP"
+            android:textColor="@color/red"
+            app:cornerRadius="20dp"
+            app:iconTint="@color/red"
+            app:icon="@drawable/ic_keyboard_arrow_right_24px"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconSize="25dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/history_list"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/balance_layout">
+
+        <TextView
+            android:id="@+id/history_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent Activities"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/black"
+
+            />
+
+        <Button
+            android:id="@+id/more_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View All"
+            style="@style/AppTheme.Button"
+            android:textColor="@color/red"
+            android:backgroundTint="@color/white"
+            android:layout_alignParentRight="true"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wallet_activity_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_below="@+id/more_history" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

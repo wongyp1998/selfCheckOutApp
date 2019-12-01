@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/red">
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_background"
+        android:elevation="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="100dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            app:boxBackgroundColor="@color/white"
+            android:hint="Mobile number"
+            app:endIconDrawable="@drawable/ic_profile_arrow_right"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:hintEnabled="true"
+            android:textColorHint="@color/grey"
+            app:boxStrokeColor="@color/red"
+            app:boxCornerRadiusBottomEnd="5dp"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@null"
+                >
+
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            app:boxBackgroundColor="@color/white"
+            android:hint="Password"
+            app:hintEnabled="true"
+            android:textColorHint="@color/grey"
+            app:boxStrokeColor="@color/red"
+            app:boxCornerRadiusBottomEnd="5dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+
+                android:background="@null"
+                >
+
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/checkOutButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/red"
+            android:text="LOGIN"
+            android:textColor="@color/white"
+            app:cornerRadius="15dp"
+            android:layout_marginTop="20dp"
+            app:iconTint="@null"
+            app:icon="@drawable/ic_keyboard_arrow_right_24px"
+            app:iconGravity="end"
+            app:iconPadding="8dp"
+            app:iconSize="25dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

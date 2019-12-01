@@ -20,6 +20,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+
 public class TransactionHistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -39,7 +41,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tsc_toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Transaction History");
+        getSupportActionBar().setTitle("Transaction History");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

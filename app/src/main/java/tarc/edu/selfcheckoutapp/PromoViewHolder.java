@@ -13,7 +13,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PromoViewHolder extends RecyclerView.ViewHolder     {
 
     public TextView txtPromoDesc, txtOldPrice, txtNewPrice;
-    public CircleImageView circleImageView;
+      public CircleImageView circleImageView;
 
     public PromoViewHolder(@NonNull View itemView) {
         super(itemView);

@@ -25,6 +25,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
 }
 
 androidExtensions {
@@ -33,10 +37,10 @@ androidExtensions {
 
 dependencies {
     implementation 'com.braintreepayments.api:drop-in:3.7.1'
+    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "androidx.annotation:annotation:1.1.0"
@@ -46,6 +50,11 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
+    implementation 'com.msg91.sendotpandroid.library:library:1.1'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:7.0.4'//required
+    implementation 'androidx.biometric:biometric:1.0.0'
+    implementation 'com.github.thealeksandr:PFLockScreen-Android:1.0.0-beta6'
+
 
     // MLKit Dependencies
     implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
@@ -54,6 +63,7 @@ dependencies {
     api 'com.google.guava:guava:27.1-jre'
     implementation 'com.google.firebase:firebase-database:18.0.1'
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
     implementation 'com.firebaseui:firebase-ui-firestore:6.0.2'
     implementation 'com.google.firebase:firebase-core:17.0.0'
@@ -69,6 +79,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
+    implementation project(path: ':library')
 
 }
 

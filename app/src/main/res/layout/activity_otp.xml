@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OTPActivity"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/label1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OTP Verification"
+        android:textSize="26dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textStyle="bold">
+
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/label2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label1"
+        android:text="OTP has been sent to you registered phone number"
+        android:textColor="@color/grey"
+        android:gravity="center">
+
+    </TextView>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/white"
+        android:layout_below="@id/label2">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/otp_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter OTP here"
+        android:textColor="@color/black"
+        android:inputType="number"
+        android:maxLength="6"
+        app:errorEnabled="true"
+        >
+
+    </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/btnlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_layout"
+        android:gravity="center">
+
+    <Button
+        android:id="@+id/verify_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="@color/red"
+        android:text="Verify &amp; Pay"
+        android:textColor="@color/white"
+        app:cornerRadius="25dp"
+
+        />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/sendotp_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/btnlayout"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="@color/red"
+        android:text="Send OTP"
+        android:textColor="@color/white"
+        app:cornerRadius="25dp"
+
+        />
+
+
+
+</RelativeLayout>

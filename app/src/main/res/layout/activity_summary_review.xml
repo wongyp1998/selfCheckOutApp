@@ -310,7 +310,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="8dp"
-            android:text="TOTAL"
+            android:text="Total Amount (RM)"
             android:textColor="#D3D3D3"
             android:textSize="15dp"
             >
@@ -339,7 +339,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="30dp"
             android:backgroundTint="@color/red"
-            android:text="Pay Now"
+            android:text="Continue"
             android:textColor="@color/white"
             app:cornerRadius="25dp"
             app:iconTint="@null"

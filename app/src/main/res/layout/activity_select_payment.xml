@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".SelectPaymentActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/gateway_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/red"
+        android:elevation="5dp"
+
+        >
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/wallet_option"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/gateway_toolbar"
+        android:layout_height="100dp"
+        app:cardBackgroundColor="@color/white"
+        android:checkable="true"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="@color/lighter_grey"
+                android:layout_below="@+id/profile_image"
+                />
+
+            <ImageView
+                android:id="@+id/wallet_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_wallet">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/wallet_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/wallet_icon"
+                android:text="My Wallet"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="15dp">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wallet_label"
+                android:layout_toRightOf="@id/wallet_icon"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Use Wallet's Balance to Pay"
+                android:textSize="12dp"
+                android:textColor="@color/grey"
+                >
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/wallet_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="50dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="RM200.00">
+
+            </TextView>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/arrow_right"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_marginTop="40dp"-->
+<!--                android:src="@drawable/ic_profile_arrow_right"-->
+<!--                android:layout_marginRight="10dp">-->
+
+<!--            </ImageView>-->
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+    <TextView
+        android:id="@+id/wallet_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@id/wallet_option"
+        android:textColor="#FF0000"
+        android:text="Error Message"
+        android:visibility="gone">
+
+    </TextView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/other_option"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/wallet_error"
+        app:cardBackgroundColor="@color/white"
+        android:checkable="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="@color/lighter_grey"
+                android:layout_below="@+id/profile_image"
+                />
+
+            <ImageView
+                android:id="@+id/other_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_list">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/other_payment_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/other_icon"
+                android:text="Other Payment Method"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="15dp">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/other_payment_label"
+                android:layout_toRightOf="@id/other_icon"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Google Pay/Paypal/Credit &amp; Debit Card"
+                android:textSize="12dp"
+                android:textColor="@color/grey"
+                >
+
+            </TextView>
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/arrow_right"-->
+            <!--                android:layout_width="20dp"-->
+            <!--                android:layout_height="20dp"-->
+            <!--                android:layout_alignParentEnd="true"-->
+            <!--                android:layout_marginTop="40dp"-->
+            <!--                android:src="@drawable/ic_profile_arrow_right"-->
+            <!--                android:layout_marginRight="10dp">-->
+
+            <!--            </ImageView>-->
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <RelativeLayout
+        android:id="@+id/btmlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:elevation="15dp"
+
+        >
+
+        <TextView
+            android:id="@+id/amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="8dp"
+            android:text="Total Amount (RM)"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/pay_amt"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/amount_label"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/red"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            >
+
+        </TextView>
+
+        <Button
+            android:id="@+id/pay_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="30dp"
+            android:backgroundTint="@color/lighter_grey"
+            android:text="Pay Now"
+            android:textColor="@color/white"
+            app:cornerRadius="20dp"
+            app:iconTint="@null"
+            app:icon="@drawable/ic_keyboard_arrow_right_24px"
+            app:iconGravity="end"
+            app:iconPadding="8dp"
+            app:iconSize="25dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

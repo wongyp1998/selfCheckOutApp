@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="15dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/white">
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:background="@color/lighter_grey"
+            android:layout_below="@+id/profile_image"
+            />
+
+        <TextView
+            android:id="@+id/wTsc_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Description"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/wTsc_date"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:text="Date Time"
+            android:layout_below="@id/wTsc_desc"
+            android:layout_marginLeft="10dp">
+
+        </TextView>
+
+
+
+        <TextView
+            android:id="@+id/wTsc_amt"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:text="Amount"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_toLeftOf="@+id/debit_icon"
+            >
+
+        </TextView>
+
+        <ImageView
+        android:id="@+id/debit_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="22dp"
+        android:src="@drawable/debit_icon"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitXY"
+
+        >
+    </ImageView>
+
+        <ImageView
+            android:id="@+id/credit_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/credit_icon"
+            android:layout_marginRight="5dp"
+            android:scaleType="fitXY"
+
+            >
+        </ImageView>
+
+
+
+
+
+
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

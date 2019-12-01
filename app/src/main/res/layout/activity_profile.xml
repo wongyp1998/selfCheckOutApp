@@ -132,10 +132,10 @@
         </Button>
 
         <Button
-            android:id="@+id/cards_btn"
+            android:id="@+id/wallet_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Cards"
+            android:text="My Wallet"
             android:textAllCaps="false"
             android:textSize="16dp"
             android:backgroundTint="@color/white"
@@ -159,7 +159,7 @@
             android:textAllCaps="false"
             android:textSize="16dp"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/cards_btn"
+            android:layout_below="@+id/wallet_btn"
             android:backgroundTint="@color/white"
             app:icon="@drawable/ic_profile_arrow_right"
             app:iconGravity="end"
@@ -170,6 +170,25 @@
             >
 
         </Button>
+            <Button
+                android:id="@+id/security_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Set Transaction Pin"
+                android:textAllCaps="false"
+                android:textSize="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/voucher_btn"
+                android:backgroundTint="@color/white"
+                app:icon="@drawable/ic_profile_arrow_right"
+                app:iconGravity="end"
+                app:iconSize="25dp"
+                app:iconTint="@color/black"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+
+                >
+
+            </Button>
 
         </RelativeLayout>
 

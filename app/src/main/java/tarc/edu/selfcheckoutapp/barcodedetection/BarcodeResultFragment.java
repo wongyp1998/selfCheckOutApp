@@ -105,9 +105,6 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
     }
   }
 
-//  public static void showImage(String image){
-//
-//  }
 
   @Nullable
   @Override
