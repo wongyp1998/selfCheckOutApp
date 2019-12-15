@@ -17,16 +17,18 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/logo_mlkit"
+        android:icon="@drawable/app_logo"
         android:label="fyp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup,android:icon,android:label">
-        <activity android:name=".PinVerificationActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".TransactionDetailsActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".PinVerificationActivity" />
         <activity android:name=".SetTransactionPinActivity" />
-        <activity android:name=".OTPActivity" />
         <activity android:name=".SelectPaymentActivity" />
         <activity android:name=".WalletTopUpActivity" />
         <activity android:name=".eWalletActivity" />
@@ -73,7 +75,7 @@
         <activity
             android:name=".LiveBarcodeScanningActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"

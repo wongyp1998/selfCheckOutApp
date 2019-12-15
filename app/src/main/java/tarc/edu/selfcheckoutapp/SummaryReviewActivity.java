@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -29,6 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import tarc.edu.selfcheckoutapp.Model.Cart;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
+import tarc.edu.selfcheckoutapp.ViewHolder.ReviewViewHolder;
+
 
 public class SummaryReviewActivity extends AppCompatActivity {
 
@@ -44,7 +49,9 @@ public class SummaryReviewActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Cart, ReviewViewHolder> adapter;
     Dialog successfulDialog;
     String discountRate;
-    Float discountedPrice ;
+    Float discountedPrice;
+    private Double discount;
+    private Double dscPrice;
 
 
     @Override
@@ -93,7 +100,8 @@ public class SummaryReviewActivity extends AppCompatActivity {
         txtTotal.setText(String.format("%.2f",TPrice));
 
         inputDiscount.setSelection(0);
-        txtDiscPrice.setText("-(0.00)");
+        discountedPrice = Float.parseFloat((String.format("%.2f",0.0)));
+        txtDiscPrice.setText(String.format("%.2f",discountedPrice));
         txtSubtotal.setText("RM " + String.format("%.2f",TPrice));
         txtGrandTotal.setText("RM " + String.format("%.2f",TPrice));
 
@@ -118,7 +126,7 @@ public class SummaryReviewActivity extends AppCompatActivity {
                 dbDiscountCode = inputDiscount.getText().toString();
                 dbSubtotal = new Float(TPrice).toString();
                 dbTotal = txtTotal.getText().toString();
-                dbDiscountValue = txtDiscPrice.getText().toString();
+                dbDiscountValue = String.format("%.2f",discountedPrice);
 
                 editor.putString("keyCode",dbDiscountCode);
                 editor.putString("keyRate",dbDiscountRate);
@@ -157,7 +165,7 @@ public class SummaryReviewActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Cart> options = new FirebaseRecyclerOptions.Builder<Cart>()
                 .setQuery(cartListRef.child("Cart List").child("User View")
-                        .child("013-6067208")
+                        .child(LoginPreferenceUtils.getPhone(SummaryReviewActivity.this))
                         .child("Products"),Cart.class)
                 .build();
 
@@ -170,8 +178,25 @@ public class SummaryReviewActivity extends AppCompatActivity {
                 Picasso.get().load(model.getImageRef()).into(holder.circleImageView);
                 holder.txtPName.setText(model.getPname());
                 holder.txtPWeight.setText(model.getWeight());
-                holder.txtPPrice.setText("RM " + model.getPrice());
+                Double price = Double.parseDouble(model.getPrice());
+                holder.txtPPrice.setText("RM " + String.format("%.2f",price));
                 holder.txtPQuantity.setText("x"+model.getQuantity());
+
+
+                if(model.getDiscount()!=null) {
+                    discount = model.getDiscount();
+                    dscPrice = price * (1 - discount);
+                }
+
+                if(discount!=null) {
+                    if (discount > 0) {
+                        holder.txtDscPrice.setVisibility(View.VISIBLE);
+                        holder.txtPPrice.setTextColor(getResources().getColor(R.color.grey));
+                        holder.txtPPrice.setPaintFlags(holder.txtPPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        holder.txtDscPrice.setText("RM" + String.format("%.2f", dscPrice));
+                        holder.txtDscPrice.setTextSize(11);
+                    }
+                }
 
 
 

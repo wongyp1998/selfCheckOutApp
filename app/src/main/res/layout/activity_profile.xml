@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity"
     android:background="@color/white">
 
     <TextView
@@ -106,6 +105,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="30dp"
         app:cardCornerRadius="5dp"
+        android:elevation="20dp"
         app:cardBackgroundColor="@color/white"
         >
 
@@ -113,86 +113,218 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/tsc_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Transaction History"
-            android:textAllCaps="false"
-            android:textSize="16dp"
-            android:backgroundTint="@color/white"
-            app:icon="@drawable/ic_profile_arrow_right"
-            app:iconGravity="end"
-            app:iconSize="25dp"
-            app:iconTint="@color/black"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
 
-            >
-
-        </Button>
-
-        <Button
-            android:id="@+id/wallet_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="My Wallet"
-            android:textAllCaps="false"
-            android:textSize="16dp"
-            android:backgroundTint="@color/white"
-            android:layout_below="@+id/tsc_btn"
-            app:icon="@drawable/ic_profile_arrow_right"
-            android:layout_marginTop="5dp"
-            app:iconGravity="end"
-            app:iconSize="25dp"
-            app:iconTint="@color/black"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-
-            >
-
-        </Button>
-
-        <Button
-            android:id="@+id/voucher_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Voucher"
-            android:textAllCaps="false"
-            android:textSize="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/wallet_btn"
-            android:backgroundTint="@color/white"
-            app:icon="@drawable/ic_profile_arrow_right"
-            app:iconGravity="end"
-            app:iconSize="25dp"
-            app:iconTint="@color/black"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-
-            >
-
-        </Button>
-            <Button
-                android:id="@+id/security_btn"
+            <LinearLayout
+                android:id="@+id/history_layout"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Set Transaction Pin"
-                android:textAllCaps="false"
-                android:textSize="16dp"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/voucher_btn"
-                android:backgroundTint="@color/white"
-                app:icon="@drawable/ic_profile_arrow_right"
-                app:iconGravity="end"
-                app:iconSize="25dp"
-                app:iconTint="@color/black"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
 
-                >
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="60dp"
+                    android:src="@drawable/history_list"
+                    android:padding="18dp"
+                    >
 
-            </Button>
+                </ImageView>
+
+                <Button
+                    android:id="@+id/tsc_btn"
+                    android:layout_width="0dp"
+                    android:layout_weight="8.5"
+                    android:layout_height="60dp"
+                    android:text="Transaction History"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textAlignment="textStart"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/ic_keyboard_arrow_right_24px"
+                    app:iconGravity="end"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/red"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+
+                    >
+
+
+                </Button>
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wallet_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/history_layout"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_wallet"
+                    android:padding="19dp"
+                    >
+
+                </ImageView>
+
+                <Button
+                    android:id="@+id/wallet_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="8.5"
+                    android:text="My Wallet"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/ic_keyboard_arrow_right_24px"
+                    android:layout_marginTop="5dp"
+                    app:iconGravity="end"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/red"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+
+                    >
+
+                </Button>
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/voucher_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wallet_layout"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_coupon"
+                    android:padding="18dp"
+                    >
+
+                </ImageView>
+
+                <Button
+                    android:id="@+id/voucher_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="8.5"
+                    android:text="Voucher"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/ic_keyboard_arrow_right_24px"
+                    app:iconGravity="end"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/red"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+
+                    >
+
+                </Button>
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/security_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/voucher_layout"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_padlock"
+                    android:padding="18dp"
+                    >
+
+                </ImageView>
+
+                <Button
+                    android:id="@+id/security_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="8.5"
+                    android:text="Change 6-digit PIN"
+                    android:textAllCaps="false"
+                    android:textSize="16dp"
+                    android:textColor="@color/black"
+                    android:textAlignment="textStart"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/voucher_layout"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/ic_keyboard_arrow_right_24px"
+                    app:iconGravity="end"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/red"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+
+                    >
+
+                </Button>
+
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
 
         </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/signOut_btn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:text="SIGN OUT"
+        android:textColor="@color/red"
+        app:iconTint="@null"
+        app:icon="@drawable/ic_sign_out"
+        app:iconGravity="textEnd"
+        app:iconPadding="8dp"
+        app:iconSize="16dp"
+        app:cornerRadius="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/btn_card"
+        />
 
 </RelativeLayout>

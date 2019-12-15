@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.common.images.Size;
 import tarc.edu.selfcheckoutapp.R;
-import tarc.edu.selfcheckoutapp.Utils;
+import tarc.edu.selfcheckoutapp.UtlityClass.Utils;
 import java.io.IOException;
 
 /** Preview the camera image in the screen. */

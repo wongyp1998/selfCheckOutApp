@@ -1,12 +1,9 @@
 package tarc.edu.selfcheckoutapp;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,18 +29,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import tarc.edu.selfcheckoutapp.R;
-import tarc.edu.selfcheckoutapp.Cart;
-import tarc.edu.selfcheckoutapp.CartViewHolder;
-import tarc.edu.selfcheckoutapp.MainActivity;
 
 import com.google.firebase.database.ValueEventListener;
-import com.luseen.spacenavigation.SpaceNavigationView;
 import com.squareup.picasso.Picasso;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import tarc.edu.selfcheckoutapp.Model.Cart;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
+import tarc.edu.selfcheckoutapp.ViewHolder.CartViewHolder;
 
 public class CartFragment extends Fragment {
 
@@ -57,6 +50,8 @@ public class CartFragment extends Fragment {
     private float overTotalPrice = 0;
     RelativeLayout layout1,layout2;
     private FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter;
+    private Double discount;
+    private Double dscPrice;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -79,8 +74,9 @@ public class CartFragment extends Fragment {
         checkoutBtn = (Button)root.findViewById(R.id.checkOutButton);
         txtTotal = (TextView) root.findViewById(R.id.cart_total_price);
 
+        //To display empty cart view when there is no item in the cart
         cartListRef.child("User View")
-                .child("013-6067208")
+                .child(LoginPreferenceUtils.getPhone(getActivity()))
                 .child("Products").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,7 +96,7 @@ public class CartFragment extends Fragment {
         });
 
         cartListRef.child("User View")
-                .child("013-6067208")
+                .child(LoginPreferenceUtils.getPhone(getActivity()))
                 .child("Products").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -148,7 +144,7 @@ public class CartFragment extends Fragment {
 
         FirebaseRecyclerOptions<Cart> options = new FirebaseRecyclerOptions.Builder<Cart>()
                 .setQuery(cartListRef.child("User View")
-                        .child("013-6067208")
+                        .child(LoginPreferenceUtils.getPhone(getActivity()))
                         .child("Products"),Cart.class)
                 .build();
 
@@ -159,8 +155,24 @@ public class CartFragment extends Fragment {
                 Picasso.get().load(model.getImageRef()).into(holder.circleImageView);
                 holder.txtPName.setText(model.getPname());
                 holder.txtPWeight.setText(model.getWeight());
-                holder.txtPPrice.setText("RM " + model.getPrice());
                 holder.numberPicker.setValue(Integer.parseInt(model.getQuantity()));
+                Double price = Double.parseDouble(model.getPrice());
+                holder.txtPPrice.setText("RM " + String.format("%.2f",price));
+
+                if(model.getDiscount()!=null) {
+                    discount = model.getDiscount();
+                    dscPrice = price * (1 - discount);
+                }
+
+                if(discount!=null) {
+                    if (discount > 0) {
+                        holder.txtDiscountPrice.setVisibility(View.VISIBLE);
+                        holder.txtPPrice.setTextSize(12);
+                        holder.txtPPrice.setTextColor(getResources().getColor(R.color.grey));
+                        holder.txtPPrice.setPaintFlags(holder.txtPPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        holder.txtDiscountPrice.setText("RM" + String.format("%.2f", dscPrice));
+                    }
+                }
 
 
 
@@ -207,6 +219,8 @@ public class CartFragment extends Fragment {
 
 
 
+
+
     }
 
 
@@ -222,17 +236,19 @@ public class CartFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             Cart cart = adapter.getItem(position);
 
+
             if(position==0){
                 txtTotal.setText("0.00");
-                ((MainActivity)getActivity()).itemCount = 0;
-                ((MainActivity)getActivity()).showBadgeCount(0);
-                layout1.setVisibility(View.GONE);
-                layout2.setVisibility(View.VISIBLE);
+                ((HomeActivity)getActivity()).itemCount = 0;
+                ((HomeActivity)getActivity()).showBadgeCount(0);
+
             }
 
 
+
+
             cartListRef.child("User View")
-                    .child("013-6067208")
+                    .child(LoginPreferenceUtils.getPhone(getActivity()))
                     .child("Products")
                     .child(cart.getPid())
                     .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -242,6 +258,13 @@ public class CartFragment extends Fragment {
                     if(task.isSuccessful()){
                         Toast.makeText(getActivity(), "Item Removed Successfully",Toast.LENGTH_SHORT).show();
                         getTotalPrice();
+
+                        if(adapter.getItemCount() == 0)
+                        {
+                            layout1.setVisibility(View.GONE);
+                            layout2.setVisibility(View.VISIBLE);
+
+                        }
 
 
 
@@ -271,24 +294,27 @@ public class CartFragment extends Fragment {
 
     public void updateQuantity(String pid, int value){
         cartListRef.child("User View")
-                .child("013-6067208")
+                .child(LoginPreferenceUtils.getPhone(getActivity()))
                 .child("Products")
                 .child(pid)
                 .child("quantity")
                 .setValue(String.valueOf(value));
     }
 
+    //To calculate total price of items in the cart
     public void getTotalPrice(){
         overTotalPrice = 0;
         cartListRef.child("User View")
-                .child("013-6067208")
+                .child(LoginPreferenceUtils.getPhone(getActivity()))
                 .child("Products").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
 
                         Cart cart = snapshot.getValue(Cart.class);
-                        overTotalPrice += Float.parseFloat(cart.getPrice()) * Float.parseFloat(cart.getQuantity());
+                        Float price = Float.parseFloat(cart.getPrice()) * (1-Float.valueOf(cart.getDiscount().toString()));
+
+                        overTotalPrice += price * Float.parseFloat(cart.getQuantity());
                         txtTotal.setText("RM " + String.format("%.2f", overTotalPrice));
 
                 }
@@ -302,11 +328,11 @@ public class CartFragment extends Fragment {
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        overTotalPrice =0;
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//        overTotalPrice =0;
+//    }
 
 }

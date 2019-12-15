@@ -23,7 +23,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import tarc.edu.selfcheckoutapp.camera.CameraSizePair;
 import tarc.edu.selfcheckoutapp.camera.CameraSource;
 import tarc.edu.selfcheckoutapp.R;
-import tarc.edu.selfcheckoutapp.Utils;
+import tarc.edu.selfcheckoutapp.UtlityClass.Utils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

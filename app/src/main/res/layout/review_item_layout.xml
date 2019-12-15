@@ -46,20 +46,36 @@
             android:textStyle="bold"
             android:layout_marginTop="35dp"
             android:textSize="10dp"
-            android:text="Product Name">
+            android:text="Weight">
+
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/review_pprice"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_marginLeft="80dp"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:layout_marginTop="55dp"
+            android:textSize="10dp"
+            android:text="Price">
 
         </TextView>
 
         <TextView
-            android:id="@+id/review_pprice"
-            android:layout_width="80dp"
+            android:id="@+id/review_dscPrice"
+            android:layout_width="wrap_content"
             android:layout_height="15dp"
-            android:layout_marginLeft="80dp"
-            android:textColor="@color/grey"
+            android:textColor="@color/red"
             android:textStyle="bold"
             android:layout_marginTop="55dp"
+            android:layout_toRightOf="@+id/review_pprice"
             android:textSize="10dp"
-            android:text="Weight">
+            android:layout_marginLeft="5dp"
+            android:visibility="gone"
+            android:text="Price">
 
         </TextView>
 

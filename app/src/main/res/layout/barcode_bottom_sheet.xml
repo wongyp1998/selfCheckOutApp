@@ -3,10 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="@dimen/barcode_bottom_sheet_padding_vertical"
     android:paddingBottom="@dimen/barcode_bottom_sheet_padding_vertical"
     android:background="@color/white"
     android:orientation="vertical">
+
+  <LinearLayout
+      android:id="@+id/dscTag"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:background="@drawable/promo_background"
+      android:paddingLeft="11dp"
+      android:visibility="invisible"
+      android:orientation="vertical"
+
+      >
+
+    <TextView
+        android:id="@+id/dscValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        >
+
+    </TextView>
+
+  </LinearLayout>
 
   <LinearLayout
       android:layout_width="wrap_content"
@@ -24,10 +49,48 @@
 
 
   </LinearLayout>
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginTop="10dp"
+      android:layout_marginBottom="10dp">
+
+    <TextView
+        android:id="@+id/prodPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="oldPrice"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:textSize="16dp"
+        android:textColor="@color/grey"
+        android:textAlignment="center">
+
+    </TextView>
+    <TextView
+        android:id="@+id/prodNewPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="newPrice"
+        android:textSize="20dp"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:visibility="gone"
+        android:textAlignment="textStart"
+        >
+
+    </TextView>
+
+  </LinearLayout>
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/barcode_field_recycler_view"
       android:layout_width="match_parent"
-      android:layout_height="260dp"
+      android:layout_height="wrap_content"
       android:scrollbars="vertical" />
 
   <LinearLayout
@@ -83,6 +146,32 @@
         app:cornerRadius="25dp"
         app:icon="@drawable/ic_shopping_cart_black_24dp"
         app:iconSize="15dp"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/discount_tag"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:background="@drawable/promo_background"
+      android:paddingLeft="11dp"
+      android:visibility="invisible"
+      android:orientation="vertical"
+
+      >
+
+    <TextView
+        android:id="@+id/dsc_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        >
+
+    </TextView>
 
   </LinearLayout>
 

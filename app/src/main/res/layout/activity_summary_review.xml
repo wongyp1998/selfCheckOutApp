@@ -341,7 +341,7 @@
             android:backgroundTint="@color/red"
             android:text="Continue"
             android:textColor="@color/white"
-            app:cornerRadius="25dp"
+            app:cornerRadius="20dp"
             app:iconTint="@null"
             app:icon="@drawable/ic_keyboard_arrow_right_24px"
             app:iconGravity="end"

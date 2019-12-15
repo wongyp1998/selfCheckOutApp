@@ -3,7 +3,6 @@ package tarc.edu.selfcheckoutapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricPrompt;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -43,13 +42,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,6 +54,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executor;
+
+import tarc.edu.selfcheckoutapp.Model.Cart;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 
 public class SelectPaymentActivity extends AppCompatActivity {
 
@@ -69,8 +69,8 @@ public class SelectPaymentActivity extends AppCompatActivity {
     private Button btnViewReceipt,btnPay;
 
     private static final int REQUEST_CODE = 1234;
-    String API_GET_TOKEN = "http://172.16.99.81:8080/braintree/main.php";
-    String API_CHECK_OUT = "http://172.16.99.81:8080/braintree/checkout.php";
+    String API_GET_TOKEN = "http://192.168.0.120:8080/braintree/main.php";
+    String API_CHECK_OUT = "http://192.168.0.120:8080/braintree/checkout.php";
 
 
     static final private String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -108,7 +108,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
 
         btnPay.setEnabled(false);
 
-        cartListRef.child("User").child("0136067208").addListenerForSingleValueEvent(new ValueEventListener() {
+        cartListRef.child("User").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double balance = dataSnapshot.child("balance").getValue(Double.class);
@@ -202,6 +202,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
                     method = "E-Wallet";
                     Intent ii = new Intent(SelectPaymentActivity.this, PinVerificationActivity.class);
 ////                    ii.putExtra("tscID",transactionID);
+                    ii.putExtra("verifyKey","key2");
                     startActivityForResult(ii,1);
                 }else if(cardView2.isChecked() == true)
                 {
@@ -305,6 +306,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 if(response.toString().contains("Successful")){
                     addingTransactiontoDB();
+                    updateStock();
                     showPopup();
 
                 }
@@ -403,16 +405,17 @@ public class SelectPaymentActivity extends AppCompatActivity {
 
     public void walletPayment(){
 
-        cartListRef.child("User").child("0136067208").addListenerForSingleValueEvent(new ValueEventListener() {
+        cartListRef.child("User").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double balance = dataSnapshot.child("balance").getValue(Double.class);
                 Double totalAmt = Double.parseDouble(payAmount.getText().toString());
                 if(balance >= totalAmt){
                     Double newBalance = balance - totalAmt;
-                    cartListRef.child("User").child("0136067208").child("balance").setValue(newBalance);
+                    cartListRef.child("User").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).child("balance").setValue(newBalance);
                     addingTransactiontoDB();
                     updateWalletActivity();
+                    updateStock();
                     showPopup();
                 }else{
                     errorMsg.setText("Insufficient wallet balance for transaction.");
@@ -476,7 +479,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
         TopUpMap.put("wTscAmount",topupAmt);
         TopUpMap.put("wTscStatus",status);
 
-        cartListRef.child("WalletTransaction").child("0136067208").child(topUpTscID).updateChildren(TopUpMap);
+        cartListRef.child("WalletTransaction").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).child(topUpTscID).updateChildren(TopUpMap);
 
 
 
@@ -496,8 +499,8 @@ public class SelectPaymentActivity extends AppCompatActivity {
 
 
         final HashMap<String, Object> transactionMap = new HashMap<>();
-        final DatabaseReference fromRef = cartListRef.child("Cart List").child("User View").child("013-6067208").child("Products");
-        final DatabaseReference toRef = cartListRef.child("Transaction").child("013-6067208").child(transactionID).child("product");
+        final DatabaseReference fromRef = cartListRef.child("Cart List").child("User View").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).child("Products");
+        final DatabaseReference toRef = cartListRef.child("Transaction").child(transactionID).child("product");
 
         String dbDate,dbTime;
         dbTime = saveCurrentTime;
@@ -511,16 +514,19 @@ public class SelectPaymentActivity extends AppCompatActivity {
         transactionMap.put("total",Double.parseDouble(pref.getString("keyTotal",null)));
         transactionMap.put("tscDate", dbDate);
         transactionMap.put("tscTime", dbTime);
+        transactionMap.put("timeStamp",ServerValue.TIMESTAMP);
         transactionMap.put("tscID", transactionID);
         transactionMap.put("discountValue", pref.getString("keyValue",null));
         transactionMap.put("paymentMethod",method);
+        transactionMap.put("customerPhone",LoginPreferenceUtils.getPhone(SelectPaymentActivity.this));
+        transactionMap.put("verifyStatus",0);
 
-        cartListRef.child("Transaction").child("013-6067208").child(transactionID)
+        cartListRef.child("Transaction").child(transactionID)
                 .updateChildren(transactionMap);
 
         moveRecord(fromRef,toRef);
 
-        cartListRef.child("Cart List").child("User View").child("013-6067208").child("Products").removeValue();
+        cartListRef.child("Cart List").child("User View").child(LoginPreferenceUtils.getPhone(SelectPaymentActivity.this)).child("Products").removeValue();
 
 
 
@@ -548,6 +554,48 @@ public class SelectPaymentActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
         fromPath.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    private void updateStock()
+    {
+        cartListRef.child("Transaction").child(transactionID).child("product").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+                    Cart cart = snapshot.getValue(Cart.class);
+                    String productID = cart.getPid();
+                    int qty = Integer.parseInt(cart.getQuantity());
+                    cartListRef.child("Products").child(productID).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int sold = dataSnapshot.child("Sold").getValue(Integer.class);
+                            int currentStock = dataSnapshot.child("CurrentStock").getValue(Integer.class);
+                            int newSold = sold + qty;
+                            int newStock = currentStock - qty;
+                            cartListRef.child("Products").child(productID).child("Sold").setValue(newSold);
+                            cartListRef.child("Products").child(productID).child("CurrentStock").setValue(newStock);
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     char randomChar(){

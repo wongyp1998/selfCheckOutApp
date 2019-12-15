@@ -8,8 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -47,11 +45,11 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 
 public class WalletTopUpActivity extends AppCompatActivity {
 
@@ -70,7 +68,6 @@ public class WalletTopUpActivity extends AppCompatActivity {
     private Button continueBtn,dialogCtnBtn;
     private TextView topUpValue,errorMsg;
     Dialog successfulDialog;
-    private TextView txtTransactionDate, txtTransactionTime, txtTransactionAmt;
     private Map<String,String> date;
 
 
@@ -369,7 +366,7 @@ public class WalletTopUpActivity extends AppCompatActivity {
 
     private void updateBalance(){
 
-        userdbRef.child("User").child("0136067208").addListenerForSingleValueEvent(new ValueEventListener() {
+        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double balance = dataSnapshot.child("balance").getValue(Double.class);
@@ -407,44 +404,9 @@ public class WalletTopUpActivity extends AppCompatActivity {
         TopUpMap.put("wTscStatus",status);
         TopUpMap.put("wPaymentMethod",topUpMethod);
 
-        userdbRef.child("WalletTransaction").child("0136067208").child(topUpTscID).updateChildren(TopUpMap);
-
-
+        userdbRef.child("WalletTransaction").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).child(topUpTscID).updateChildren(TopUpMap);
 
 
 
     }
-
-//    public void showPopup(){
-//        successfulDialog.setContentView(R.layout.topup_success_dialog);
-//        txtTransactionDate = (TextView)successfulDialog.findViewById(R.id.topup_date);
-//        txtTransactionAmt= (TextView)successfulDialog.findViewById(R.id.topup_amount);
-//        dialogCtnBtn = (Button)successfulDialog.findViewById(R.id.dialog_continue);
-//
-//        Long tscDate = Long.parseLong(date.toString());
-//
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
-//        String topupDate = dateFormat.format(new Date(tscDate));
-//
-//
-//
-//        txtTransactionDate.setText(topupDate);
-//        txtTransactionAmt.setText(amount);
-//
-//
-//
-//        successfulDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        successfulDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        successfulDialog.setCanceledOnTouchOutside(false);
-//        successfulDialog.show();
-//
-//        dialogCtnBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-//
-//
-//    }
 }

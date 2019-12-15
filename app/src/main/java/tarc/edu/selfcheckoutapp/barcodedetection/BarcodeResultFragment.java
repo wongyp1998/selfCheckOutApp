@@ -17,18 +17,17 @@
 package tarc.edu.selfcheckoutapp.barcodedetection;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,15 +44,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import tarc.edu.selfcheckoutapp.Model.Cart;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 import tarc.edu.selfcheckoutapp.R;
 import tarc.edu.selfcheckoutapp.LiveBarcodeScanningActivity;
-import tarc.edu.selfcheckoutapp.Product;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel.WorkflowState;
 
+import com.google.firebase.database.ValueEventListener;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.squareup.picasso.Picasso;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
@@ -74,15 +73,18 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
   private static final String ARG_BARCODE_FIELD_LIST = "arg_barcode_field_list";
   private Button addToCartButton;
   private NumberPicker numberPicker;
+  private TextView txtOriPrice,txtPromoPrice,txtPromoValue;
   public static final String SHARED_PREFS = "sharedPrefs";
   public static CircleImageView circleImageView;
   SpaceNavigationView navigationView;
+  LinearLayout promoTag;
   final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
   private String pname;
   private String pbarcode;
   private String pprice;
   private String pimage;
   private String pweight;
+  private String pdiscount;
 
   private ValueChangedListener valueChangedListener;
   private String quantity;
@@ -118,6 +120,11 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
 
     circleImageView = (CircleImageView) view.findViewById(R.id.product_image);
     navigationView = (SpaceNavigationView)((Activity)getActivity()).findViewById(R.id.space);
+    txtOriPrice = view.findViewById(R.id.prodPrice);
+    txtPromoPrice = view.findViewById(R.id.prodNewPrice);
+    txtPromoValue = view.findViewById(R.id.dscValue);
+    promoTag = view.findViewById(R.id.dscTag);
+
 
     pimage =((LiveBarcodeScanningActivity)getActivity()).productimage;
     Picasso.get().load(pimage).into(circleImageView);
@@ -138,9 +145,31 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
     pbarcode = sharedPreferences.getString("pbarcode","");
     pprice = sharedPreferences.getString("pprice","");
     pweight = sharedPreferences.getString("pweight","");
+    pdiscount = sharedPreferences.getString("pdiscount","");
+
+
+    Double price = Double.parseDouble(pprice);
+    Double discount = Double.parseDouble(pdiscount);
+    Double newPrice = price * (1-discount);
+
+    txtOriPrice.setText("RM"+String.format("%.2f",price));
+
+    if(discount>0)
+    {
+      promoTag.setVisibility(View.VISIBLE);
+      txtPromoValue.setText("-"+String.format("%.0f",discount*100)+"%");
+      txtPromoPrice.setVisibility(View.VISIBLE);
+      txtOriPrice.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+      txtOriPrice.setPaintFlags(txtOriPrice.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+      txtPromoPrice.setText("RM"+String.format("%.2f",newPrice));
+    }
+
+
 
     addToCartButton = view.findViewById(R.id.addCartButton);
     numberPicker = view.findViewById(R.id.number_picker);
+
+
 
     quantity = String.valueOf(numberPicker.getValue());
     numberPicker.setValueChangedListener(new ValueChangedListener() {
@@ -206,17 +235,35 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
     cartMap.put("time",saveCurrentTime);
     cartMap.put("quantity",quantity);
 
-    cartListRef.child("User View").child("013-6067208")
+    Double discount = Double.parseDouble(pdiscount);
+    cartMap.put("discount",discount);
+
+
+
+
+    cartListRef.child("User View").child(LoginPreferenceUtils.getPhone(getActivity()))
             .child("Products").child(pbarcode)
-            .updateChildren(cartMap)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
+            .addListenerForSingleValueEvent(new ValueEventListener() {
               @Override
-              public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful())
+              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
                 {
-//                  Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
-//                  dismiss();
-                  cartListRef.child("Admin View").child("013-6067208")
+                  Cart cart = dataSnapshot.getValue(Cart.class);
+                  int currentQty = Integer.parseInt(cart.getQuantity());
+                  int newQty = currentQty + Integer.parseInt(quantity);
+                  cartListRef.child("User View").child(LoginPreferenceUtils.getPhone(getActivity())).child("Products").child(pbarcode).child("quantity")
+                          .setValue(String.valueOf(newQty)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                      Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
+                      dismiss();
+                    }
+                  });
+                }
+                else
+                {
+
+                  cartListRef.child("User View").child(LoginPreferenceUtils.getPhone(getActivity()))
                           .child("Products").child(pbarcode)
                           .updateChildren(cartMap)
                           .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -226,13 +273,26 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
                               {
                                 Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
                                 dismiss();
+
+
                               }
                             }
                           });
 
                 }
+
+              }
+
+              @Override
+              public void onCancelled(@NonNull DatabaseError databaseError) {
+
               }
             });
+
+
+
+
+
   }
 
 }

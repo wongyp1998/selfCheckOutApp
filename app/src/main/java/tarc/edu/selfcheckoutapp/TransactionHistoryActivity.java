@@ -2,7 +2,6 @@ package tarc.edu.selfcheckoutapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +20,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Date;
+import tarc.edu.selfcheckoutapp.Model.Transaction;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
+import tarc.edu.selfcheckoutapp.ViewHolder.TransactionViewHolder;
 
 public class TransactionHistoryActivity extends AppCompatActivity {
 
@@ -66,7 +68,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Transaction> options = new FirebaseRecyclerOptions.Builder<Transaction>()
                 .setQuery(cartListRef.child("Transaction")
-                        .child("013-6067208").orderByChild("Date"),Transaction.class)
+                        .orderByChild("customerPhone").equalTo(LoginPreferenceUtils.getPhone(this)),Transaction.class)
                 .build();
 
         adapter = new FirebaseRecyclerAdapter<Transaction, TransactionViewHolder>(options) {
@@ -78,11 +80,25 @@ public class TransactionHistoryActivity extends AppCompatActivity {
                 holder.txtTscTime.setText(model.getTscTime());
                 holder.txtTscAmt.setText("RM" + model.getTotal());
 
+                if(model.getVerifyStatus() == 0)
+                {
+                    holder.status_layout.setBackgroundResource(R.drawable.unverified_background);
+                    holder.txtTscStatus.setText("UNVERIFIED");
+                    holder.txtTscStatus.setTextColor(getResources().getColor(R.color.unverified));
+                }else
+                {
+                    holder.status_layout.setBackgroundResource(R.drawable.verified_background);
+                    holder.txtTscStatus.setText("VERIFIED");
+                    holder.txtTscStatus.setTextColor(getResources().getColor(R.color.verified));
+
+
+                }
+
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(TransactionHistoryActivity.this, ViewReceiptActivity.class);
-                        intent.putExtra("uniqueID2",model.getTscID());
+                        Intent intent = new Intent(TransactionHistoryActivity.this, TransactionDetailsActivity.class);
+                        intent.putExtra("tscID",model.getTscID());
                         startActivity(intent);
 
                     }

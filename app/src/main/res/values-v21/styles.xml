@@ -10,6 +10,7 @@
   <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button.TextButton">
     <item name="android:textColor">@color/red</item>
   </style>
+
   <style name="VoucherCodeEditText">
     <item name="android:background">@drawable/promo_editext_background</item>
     <item name="android:elevation">10dp</item>

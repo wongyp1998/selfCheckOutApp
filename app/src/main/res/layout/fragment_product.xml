@@ -8,21 +8,21 @@
     tools:context=".ui.Home.ProductFragment">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
         <LinearLayout
             android:id="@+id/search_text_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red">
+            android:background="@color/red"
+            android:elevation="15dp"
+            android:orientation="horizontal">
 
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_margin="6dp"
                 android:padding="2dp"
                 app:queryHint="Search Product"
@@ -31,14 +31,35 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/search_text_layout">
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/category_tab"
+        android:layout_below="@+id/search_text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextColor="@color/red"
+        app:tabIndicatorColor="@color/red"
+        app:tabInlineLabel="true"
+        android:elevation="15dp"
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </RelativeLayout>
+        >
+
+
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/category_tab"
+        >
+
+    </androidx.viewpager.widget.ViewPager>
+
+
 
 
 </RelativeLayout>

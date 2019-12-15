@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -28,6 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import tarc.edu.selfcheckoutapp.Model.WalletTransaction;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
+import tarc.edu.selfcheckoutapp.ViewHolder.WalletActivityViewHolder;
+
 
 public class eWalletActivity extends AppCompatActivity {
 
@@ -61,7 +65,7 @@ public class eWalletActivity extends AppCompatActivity {
         topup_btn = findViewById(R.id.btn_topup);
         balancetxt = findViewById(R.id.blc_amount);
 
-        userdbRef.child("User").child("0136067208").addChildEventListener(new ChildEventListener() {
+        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 showBalance();
@@ -117,7 +121,7 @@ public class eWalletActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<WalletTransaction> options = new FirebaseRecyclerOptions.Builder<WalletTransaction>()
                 .setQuery(cartListRef.child("WalletTransaction")
-                        .child("0136067208").orderByChild("wTscDateTime").limitToLast(4),WalletTransaction.class)
+                        .child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).orderByChild("wTscDateTime").limitToLast(4),WalletTransaction.class)
                 .build();
 
         adapter = new FirebaseRecyclerAdapter<WalletTransaction, WalletActivityViewHolder>(options) {
@@ -166,7 +170,7 @@ public class eWalletActivity extends AppCompatActivity {
 
 
     private void showBalance(){
-        userdbRef.child("User").child("0136067208").addListenerForSingleValueEvent(new ValueEventListener() {
+        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double balance = dataSnapshot.child("balance").getValue(Double.class);

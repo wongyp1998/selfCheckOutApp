@@ -19,18 +19,15 @@ package tarc.edu.selfcheckoutapp;
 import android.Manifest;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +43,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.common.base.Objects;
 import com.google.firebase.database.DataSnapshot;
@@ -57,7 +53,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import tarc.edu.selfcheckoutapp.R;
+
+import tarc.edu.selfcheckoutapp.Model.Product;
 import tarc.edu.selfcheckoutapp.camera.GraphicOverlay;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel;
 import tarc.edu.selfcheckoutapp.camera.WorkflowModel.WorkflowState;
@@ -69,9 +66,6 @@ import tarc.edu.selfcheckoutapp.camera.CameraSourcePreview;
 import tarc.edu.selfcheckoutapp.settings.SettingsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.luseen.spacenavigation.SpaceNavigationView;
-import com.travijuu.numberpicker.library.NumberPicker;
-import tarc.edu.selfcheckoutapp.MainActivity;
 
 
 import java.io.IOException;
@@ -79,8 +73,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /** Demonstrates the barcode scanning workflow using camera preview. */
 public class LiveBarcodeScanningActivity extends AppCompatActivity implements OnClickListener {
@@ -211,10 +203,6 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
   }
 
   private void beep(){
-//    ToneGenerator generator = new ToneGenerator((AudioManager.STREAM_NOTIFICATION),100);
-//    generator.startTone(ToneGenerator.TONE_PROP_BEEP);
-//    SystemClock.sleep(100);
-//    generator.release();
 
     MediaPlayer beepSound = MediaPlayer.create(this,R.raw.beep);
 
@@ -277,52 +265,51 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
         this,
         barcode -> {
           if (barcode != null) {
-                    DocumentReference docRef = mFireStore.collection("products").document(barcode.getRawValue());
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                      @Override
-                      public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists()) {
-                              Product product = document.toObject(Product.class);
-                              SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                              SharedPreferences.Editor editor = sharedPreferences.edit();
-                              ArrayList<BarcodeField> barcodeFieldList = new ArrayList<>();
-                              productimage = product.getImage();
-                              String price = "RM " + String.valueOf(Float.parseFloat(product.getPrice()));
-                              barcodeFieldList.add(new BarcodeField("Barcode Value", barcode.getRawValue()));
-                              barcodeFieldList.add(new BarcodeField("Item Name", product.getProdName()));
-                              barcodeFieldList.add(new BarcodeField("Weight", product.getWeight()));
-                              barcodeFieldList.add(new BarcodeField("Unit Price", price));
-                              editor.putString("pbarcode", barcode.getRawValue());
-                              editor.putString("pname",product.getProdName());
-                              editor.putString("pprice",String.valueOf(product.getPrice()));
-                              editor.putString("pweight",product.getWeight());
-                              editor.commit();
-                              BarcodeResultFragment.show(getSupportFragmentManager(), barcodeFieldList);
+
+            DatabaseReference productRef = FirebaseDatabase.getInstance().getReference().child("Products").child(barcode.getRawValue());
+            productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+              @Override
+              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                  Product product = dataSnapshot.getValue(Product.class);
+                  SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+                  SharedPreferences.Editor editor = sharedPreferences.edit();
+                  ArrayList<BarcodeField> barcodeFieldList = new ArrayList<>();
+                  productimage = product.getImage();
+                  barcodeFieldList.add(new BarcodeField("Barcode Value", barcode.getRawValue()));
+                  barcodeFieldList.add(new BarcodeField("Item Name", product.getName()));
+                  barcodeFieldList.add(new BarcodeField("Weight", product.getWeight()));
+                  editor.putString("pbarcode", barcode.getRawValue());
+                  editor.putString("pname",product.getName());
+                  editor.putString("pprice",String.valueOf(product.getPrice()));
+                  editor.putString("pweight",product.getWeight());
+                  editor.putString("pdiscount",String.valueOf(product.getDiscount()));
+                  editor.commit();
+                  BarcodeResultFragment.show(getSupportFragmentManager(), barcodeFieldList);
+
+                }
+                else {
+                  Toast.makeText(LiveBarcodeScanningActivity.this,
+                          "Barcode does not exists, please try again.",
+                          Toast.LENGTH_SHORT).show();
+                  startCameraPreview();
+                }
+
+              }
+
+              @Override
+              public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(LiveBarcodeScanningActivity.this,
+                        "Failed to get product data, please try again.",
+                        Toast.LENGTH_SHORT).show();
+                Log.d("get product",
+                        "Error getting documents: ", databaseError.toException());
+
+              }
+            });
 
 
-
-
-
-                            }
-                            else {
-                              Toast.makeText(LiveBarcodeScanningActivity.this,
-                                      "Barcode does not exists, please try again.",
-                                      Toast.LENGTH_SHORT).show();
-                                      startCameraPreview();
-
-                            }
-
-                        } else {
-                          Toast.makeText(LiveBarcodeScanningActivity.this,
-                                  "Failed to get product data, please try again.",
-                                  Toast.LENGTH_SHORT).show();
-                          Log.d("get product",
-                                  "Error getting documents: ", task.getException());
-                        }
-                      }
-                    });
           }
         });
   }

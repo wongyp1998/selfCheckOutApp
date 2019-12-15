@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
+
 public class PinVerificationActivity extends AppCompatActivity {
 
     final DatabaseReference userListRef = FirebaseDatabase.getInstance().getReference();
@@ -28,7 +29,27 @@ public class PinVerificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin_verification);
-        showLockScreenFragment();
+
+        final PFFLockScreenConfiguration.Builder builder1 = new PFFLockScreenConfiguration.Builder(this)
+                .setTitle("Please enter your current 6-digit PIN")
+                .setCodeLength(6)
+                .setLeftButton("Can't remember")
+                .setUseFingerprint(false);
+
+        final PFFLockScreenConfiguration.Builder builder2 = new PFFLockScreenConfiguration.Builder(this)
+                .setTitle("Verify yourself with pin code or fingerprint to proceed")
+                .setCodeLength(6)
+                .setLeftButton("Can't remember")
+                .setUseFingerprint(true);
+
+        if(getIntent().hasExtra("updateKey")) {
+            showLockScreenFragment(mLoginListener2,builder1);
+        }
+        else if(getIntent().hasExtra("verifyKey"))
+        {
+            showLockScreenFragment(mLoginListener,builder2);
+
+        }
 
 
 
@@ -42,7 +63,7 @@ public class PinVerificationActivity extends AppCompatActivity {
 
                 @Override
                 public void onCodeInputSuccessful() {
-//                    Toast.makeText(PinVerificationActivity.this, "Code successfull", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PinVerificationActivity.this, "Verified successfull", Toast.LENGTH_SHORT).show();
                     Intent resultIntent = new Intent();
                     setResult(RESULT_OK,resultIntent);
                     finish();
@@ -51,7 +72,7 @@ public class PinVerificationActivity extends AppCompatActivity {
 
                 @Override
                 public void onFingerprintSuccessful() {
-                    Toast.makeText(PinVerificationActivity.this, "Fingerprint successfull", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PinVerificationActivity.this, "Verified successfully", Toast.LENGTH_SHORT).show();
                     Intent resultIntent = new Intent();
                     setResult(RESULT_OK,resultIntent);
                     finish();
@@ -59,16 +80,47 @@ public class PinVerificationActivity extends AppCompatActivity {
 
                 @Override
                 public void onPinLoginFailed() {
-                    Toast.makeText(PinVerificationActivity.this, "Pin failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PinVerificationActivity.this, "Invalid PIN", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFingerprintLoginFailed() {
-                    Toast.makeText(PinVerificationActivity.this, "Fingerprint failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PinVerificationActivity.this, "Invalid Fingerprint", Toast.LENGTH_SHORT).show();
                 }
             };
 
-    private void showLockScreenFragment() {
+    private final PFLockScreenFragment.OnPFLockScreenLoginListener mLoginListener2 =
+            new PFLockScreenFragment.OnPFLockScreenLoginListener() {
+
+                @Override
+                public void onCodeInputSuccessful() {
+                    Toast.makeText(PinVerificationActivity.this, "Verified successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PinVerificationActivity.this,SetTransactionPinActivity.class);
+                    intent.putExtra("existingUser","existing");
+                    startActivity(intent);
+
+                }
+
+                @Override
+                public void onFingerprintSuccessful() {
+                    Toast.makeText(PinVerificationActivity.this, "Verified successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PinVerificationActivity.this,SetTransactionPinActivity.class);
+                    intent.putExtra("existingUser","existing");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onPinLoginFailed() {
+                    Toast.makeText(PinVerificationActivity.this, "Invalid PIN", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFingerprintLoginFailed() {
+                    Toast.makeText(PinVerificationActivity.this, "Invalid Fingerprint", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+    private void showLockScreenFragment(PFLockScreenFragment.OnPFLockScreenLoginListener myListener,PFFLockScreenConfiguration.Builder mybuilder) {
         new PFPinCodeViewModel().isPinCodeEncryptionKeyExist().observe(
                 this,
                 new Observer<PFResult<Boolean>>() {
@@ -81,18 +133,15 @@ public class PinVerificationActivity extends AppCompatActivity {
                             Toast.makeText(PinVerificationActivity.this, "Can not get pin code info", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        showLockScreenFragment(result.getResult());
+
+                            showLockScreenFragment(result.getResult(), myListener,mybuilder);
+
                     }
                 }
         );
     }
 
-    private void showLockScreenFragment(boolean isPinExist) {
-        final PFFLockScreenConfiguration.Builder builder = new PFFLockScreenConfiguration.Builder(this)
-                .setTitle("Verify yourself with pin code or fingerprint to proceed")
-                .setCodeLength(4)
-                .setLeftButton("Can't remember")
-                .setUseFingerprint(true);
+    private void showLockScreenFragment(boolean isPinExist,PFLockScreenFragment.OnPFLockScreenLoginListener listener, PFFLockScreenConfiguration.Builder builder) {
         final PFLockScreenFragment fragment = new PFLockScreenFragment();
 
         fragment.setOnLeftButtonClickListener(new View.OnClickListener() {
@@ -106,7 +155,7 @@ public class PinVerificationActivity extends AppCompatActivity {
                 ? PFFLockScreenConfiguration.MODE_AUTH
                 : PFFLockScreenConfiguration.MODE_CREATE);
         if (isPinExist) {
-            userListRef.child("User").child("0136067208").addListenerForSingleValueEvent(new ValueEventListener() {
+            userListRef.child("User").child(LoginPreferenceUtils.getPhone(PinVerificationActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String encodedPin = dataSnapshot.child("tscPin").getValue(String.class);
@@ -119,7 +168,7 @@ public class PinVerificationActivity extends AppCompatActivity {
 
                 }
             });
-            fragment.setLoginListener(mLoginListener);
+            fragment.setLoginListener(listener);
         }
 
         fragment.setConfiguration(builder.build());

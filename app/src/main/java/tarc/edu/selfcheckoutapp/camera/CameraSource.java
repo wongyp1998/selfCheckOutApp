@@ -27,7 +27,7 @@ import android.view.SurfaceHolder;
 import android.view.WindowManager;
 import com.google.android.gms.common.images.Size;
 import tarc.edu.selfcheckoutapp.R;
-import tarc.edu.selfcheckoutapp.Utils;
+import tarc.edu.selfcheckoutapp.UtlityClass.Utils;
 import tarc.edu.selfcheckoutapp.settings.PreferenceUtils;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import java.io.IOException;

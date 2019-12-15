@@ -14,6 +14,30 @@
         android:layout_height="140dp"
         android:background="@color/white">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_rewind">
+
+            </ImageView>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_remove_icon">
+
+            </ImageView>
+
+        </LinearLayout>
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/cart_item_image"
             android:layout_width="120dp"
@@ -25,7 +49,7 @@
 
         <TextView
             android:id="@+id/cart_list_pname"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginLeft="140dp"
             android:textColor="@color/black"
@@ -37,7 +61,7 @@
 
         <TextView
             android:id="@+id/cart_list_weight"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginLeft="140dp"
             android:textColor="@color/black"
@@ -47,24 +71,46 @@
 
         </TextView>
 
-        <TextView
-            android:id="@+id/cart_list_price"
+        <LinearLayout
+            android:id="@+id/item_price_layout"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginLeft="140dp"
-            android:textColor="@color/red"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/cart_list_weight"
+
+            android:layout_marginLeft="140dp">
+
+
+
+        <TextView
+            android:id="@+id/cart_item_oldPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="@color/red"
             android:layout_marginTop="5dp"
             android:text="Product Price">
 
         </TextView>
+
+            <TextView
+                android:id="@+id/cart_item_newPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:textColor="@color/red"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                android:text="Product Price">
+
+            </TextView>
+
+        </LinearLayout>
 
         <com.travijuu.numberpicker.library.NumberPicker
             android:id="@+id/cart_number_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="140dp"
-            android:layout_below="@+id/cart_list_price"
+            android:layout_below="@+id/item_price_layout"
             android:layout_marginTop="10dp"
             app:custom_layout="@layout/number_picker_custom_layout"
             app:focusable="false"

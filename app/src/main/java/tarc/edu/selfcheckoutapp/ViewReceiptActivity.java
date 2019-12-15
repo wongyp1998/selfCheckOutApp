@@ -38,8 +38,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -47,19 +45,22 @@ import java.lang.reflect.Method;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
+import tarc.edu.selfcheckoutapp.Model.Cart;
+import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 
 public class ViewReceiptActivity extends AppCompatActivity {
 
     private ListView lv;
     final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference();
     FirebaseListAdapter adapter;
-    private LinearLayout llScroll;
+    private LinearLayout llScroll, msgLayout;
     private TextView txtReceiptSub, txtReceiptDisc, txtReceiptTotal;
     private Bitmap bitmap, bitmap2;
     private Button btn,btn1;
     private String transactionID;
     private String TAG ="GenerateQrCode";
     private ImageView qrImg;
+    private Double dsc;
     QRGEncoder qrgEncoder;
 
 
@@ -83,23 +84,55 @@ public class ViewReceiptActivity extends AppCompatActivity {
             }
         }
 
-
+        btn = findViewById(R.id.btn_view_pdf);
+        btn1 = findViewById(R.id.btn_continue);
+        txtReceiptSub = findViewById(R.id.receipt_subtotal);
+        txtReceiptDisc = findViewById(R.id.receipt_discount);
+        txtReceiptTotal = findViewById(R.id.receipt_total);
+        qrImg = findViewById(R.id.qrImage);
+        msgLayout = findViewById(R.id.receipt_view8);
 
 
 
             if(getIntent().hasExtra("uniqueID")) {
                 transactionID = getIntent().getStringExtra("uniqueID");
+                btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(ViewReceiptActivity.this, HomeActivity.class);
+                        startActivity(i);
+                    }
+                });
             }
             else if(getIntent().hasExtra("uniqueID2")){
                 transactionID = getIntent().getStringExtra("uniqueID2");
+                btn1.setText("BACK");
+                btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    finish();
+                    }
+                });
             }
 
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("size"," "+llScroll.getWidth() +"  "+llScroll.getWidth());
+                bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
+                createPdf();
+
+            }
+        });
 
 
 
 
 
-        cartListRef.child("Transaction").child("013-6067208").child(transactionID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+
+        cartListRef.child("Transaction").child(transactionID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -109,7 +142,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
 
                 txtReceiptSub.setText(String.format("%.2f",Subtotal));
-                txtReceiptDisc.setText(Discount);
+                txtReceiptDisc.setText("-("+Discount+")");
                 txtReceiptTotal.setText(String.format("%.2f", Total));
 
             }
@@ -124,15 +157,8 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
 
 
-        btn = findViewById(R.id.btn_view_pdf);
-        btn1 = findViewById(R.id.btn_continue);
-        txtReceiptSub = findViewById(R.id.receipt_subtotal);
-        txtReceiptDisc = findViewById(R.id.receipt_discount);
-        txtReceiptTotal = findViewById(R.id.receipt_total);
-        qrImg = findViewById(R.id.qrImage);
 
-
-        Query query = cartListRef.child("Transaction").child("013-6067208").child(transactionID).child("product");
+        Query query = cartListRef.child("Transaction").child(transactionID).child("product");
         FirebaseListOptions<Cart> options = new FirebaseListOptions.Builder<Cart>()
                 .setLayout(R.layout.receipt_adapter_view_layout)
                 .setQuery(query,Cart.class)
@@ -146,13 +172,34 @@ public class ViewReceiptActivity extends AppCompatActivity {
                 TextView quantity = v.findViewById(R.id.quantity);
                 TextView pprice = v.findViewById(R.id.pprice);
                 TextView ptotal = v.findViewById(R.id.ptotal);
+                TextView dscAmount = v.findViewById(R.id.discountedAmt);
+                LinearLayout dscLayout = v.findViewById(R.id.layout2);
                 Cart cart = (Cart)model;
 
                 pname.setText(cart.getPname().toString());
                 quantity.setText(cart.getQuantity().toString());
                 pprice.setText(cart.getPrice().toString());
+
                 float total = Float.parseFloat(cart.getPrice()) * Float.parseFloat(cart.getQuantity());
+
                 ptotal.setText(String.format("%.2f", total));
+
+                if(cart.getDiscount()!=null) {
+                    dsc = cart.getDiscount();
+
+
+                        if(dsc>0)
+                        {
+                            dscLayout.setVisibility(View.VISIBLE);
+                            double totalDsc = Double.parseDouble(cart.getPrice()) * dsc * Double.parseDouble(cart.getQuantity());
+                            dscAmount.setText("-("+String.format("%.2f", totalDsc)+")");
+                        }
+                        else {
+                            dscLayout.setVisibility(View.GONE);
+                        }
+
+                }
+
 
 
             }
@@ -167,23 +214,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
 
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("size"," "+llScroll.getWidth() +"  "+llScroll.getWidth());
-                bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
-                createPdf();
 
-            }
-        });
-
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ViewReceiptActivity.this, MainActivity.class);
-                startActivity(i);
-            }
-        });
 
 
     }
@@ -225,7 +256,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
     private void createPdf(){
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        //  Display display = wm.getDefaultDisplay();
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         float height = displaymetrics.heightPixels ;
@@ -305,8 +335,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(ViewReceiptActivity.this, MainActivity.class);
-        startActivity(i);
+
     }
 }
