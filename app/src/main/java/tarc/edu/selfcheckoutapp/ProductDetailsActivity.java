@@ -74,8 +74,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 Double pPrice = dataSnapshot.child("Price").getValue(Double.class);
                 String pWeight = dataSnapshot.child("Weight").getValue(String.class);
                 String pImage = dataSnapshot.child("Image").getValue(String.class);
-                String zoneNo = dataSnapshot.child("Location").child("Zone").getValue(String.class);
-                String shelfNo = dataSnapshot.child("Location").child("Shelf").getValue(String.class);
+                String zoneNo = dataSnapshot.child("Zone").getValue(String.class);
+                String shelfNo = dataSnapshot.child("Shelf").getValue(String.class);
                 String desc = dataSnapshot.child("Desc").getValue(String.class);
                 Integer currentStock = dataSnapshot.child("CurrentStock").getValue(Integer.class);
 

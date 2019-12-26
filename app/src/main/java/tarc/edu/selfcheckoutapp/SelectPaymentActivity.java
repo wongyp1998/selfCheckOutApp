@@ -3,6 +3,7 @@ package tarc.edu.selfcheckoutapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -42,11 +44,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,6 +66,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
     String saveCurrentTime, saveCurrentDate;
     private TextView txtTransactionDate, txtTransactionTime, txtTransactionAmt,walletBalance,errorMsg;
     private Button btnViewReceipt,btnPay;
+    private ProgressDialog loadingBar;
 
     private static final int REQUEST_CODE = 1234;
     String API_GET_TOKEN = "http://192.168.0.120:8080/braintree/main.php";
@@ -98,6 +98,13 @@ public class SelectPaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_payment);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.gateway_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Select Payment Method");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         cardView1 = findViewById(R.id.wallet_option);
         cardView2 = findViewById(R.id.other_option);
         walletBalance = findViewById(R.id.wallet_balance);
@@ -105,6 +112,8 @@ public class SelectPaymentActivity extends AppCompatActivity {
         btnPay = findViewById(R.id.pay_btn);
         errorMsg = findViewById(R.id.wallet_error);
         successfulDialog = new Dialog(this);
+        loadingBar = new ProgressDialog(this);
+
 
         btnPay.setEnabled(false);
 
@@ -212,6 +221,15 @@ public class SelectPaymentActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 
@@ -264,6 +282,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
                     paramsHash.put("nonce",strNonce);
 
 
+                    startLoadingDialog();
                     sendPayment();
 
                 }
@@ -290,6 +309,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
         {
             if(resultCode == RESULT_OK)
             {
+                startLoadingDialog();
                 walletPayment();
             }
         }
@@ -307,6 +327,8 @@ public class SelectPaymentActivity extends AppCompatActivity {
                 if(response.toString().contains("Successful")){
                     addingTransactiontoDB();
                     updateStock();
+                    updatePromoCodeLimit();
+                    loadingBar.dismiss();
                     showPopup();
 
                 }
@@ -416,12 +438,56 @@ public class SelectPaymentActivity extends AppCompatActivity {
                     addingTransactiontoDB();
                     updateWalletActivity();
                     updateStock();
+                    updatePromoCodeLimit();
+                    loadingBar.dismiss();
                     showPopup();
                 }else{
                     errorMsg.setText("Insufficient wallet balance for transaction.");
                     errorMsg.setVisibility(View.VISIBLE);
 
                 }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void startLoadingDialog()
+    {
+        loadingBar.setTitle("Payment Transaction");
+        loadingBar.setMessage("Processing...");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+    }
+
+    public void updatePromoCodeLimit()
+    {
+        cartListRef.child("Transaction").child(transactionID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String usedCode = dataSnapshot.child("discountCode").getValue(String.class);
+
+                if(!usedCode.equals(""))
+                {
+                    cartListRef.child("Discount").child(usedCode).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int limit = dataSnapshot.child("totalRedemption").getValue(Integer.class);
+                            int newLimit = limit-1;
+                            cartListRef.child("Discount").child(usedCode).child("limit").setValue(newLimit);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
 
             }
 
@@ -452,6 +518,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
         successfulDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         successfulDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         successfulDialog.setCanceledOnTouchOutside(false);
+        successfulDialog.setCancelable(false);
         successfulDialog.show();
 
         btnViewReceipt.setOnClickListener(new View.OnClickListener() {
@@ -488,14 +555,17 @@ public class SelectPaymentActivity extends AppCompatActivity {
     public void addingTransactiontoDB(){
 
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
+//        Date date = new Date();
+//        Long time = date.getTime();
+
         SharedPreferences pref = getSharedPreferences("tscDataPref",MODE_PRIVATE);
-        transactionID = randomUUID(16,4,'-');
+        transactionID = System.currentTimeMillis() + randomUUID(4,0,'-');
 
 
         final HashMap<String, Object> transactionMap = new HashMap<>();
@@ -520,6 +590,8 @@ public class SelectPaymentActivity extends AppCompatActivity {
         transactionMap.put("paymentMethod",method);
         transactionMap.put("customerPhone",LoginPreferenceUtils.getPhone(SelectPaymentActivity.this));
         transactionMap.put("verifyStatus",0);
+        transactionMap.put("dscCode_phone",pref.getString("keyCode",null)+"_"+LoginPreferenceUtils.getPhone(SelectPaymentActivity.this));
+
 
         cartListRef.child("Transaction").child(transactionID)
                 .updateChildren(transactionMap);

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,11 +51,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 if(task.isSuccessful())
                                 {
                                     Log.d(TAG, "Email sent.");
+                                    Toast.makeText(ForgotPasswordActivity.this, "Password reset email sent", Toast.LENGTH_SHORT).show();
+                                    finish();
+
                                 }
                                 else
                                     {
+                                        Toast.makeText(ForgotPasswordActivity.this, "Email entered is not registered", Toast.LENGTH_SHORT).show();
 
-                                }
+
+                                    }
                             }
                         });
 

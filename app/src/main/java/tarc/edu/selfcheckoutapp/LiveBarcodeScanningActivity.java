@@ -305,6 +305,7 @@ public class LiveBarcodeScanningActivity extends AppCompatActivity implements On
                         Toast.LENGTH_SHORT).show();
                 Log.d("get product",
                         "Error getting documents: ", databaseError.toException());
+                startCameraPreview();
 
               }
             });

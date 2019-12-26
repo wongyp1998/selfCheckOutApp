@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,6 +33,8 @@ public class PromoProductFragment extends Fragment {
     private RecyclerView recyclerView;
     final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Products");
     private ArrayList<Product> list;
+    private ConstraintLayout notFound;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +45,8 @@ public class PromoProductFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
+        notFound = root.findViewById(R.id.not_found_layout);
+
 
 
         return root;
@@ -90,6 +95,15 @@ public class PromoProductFragment extends Fragment {
             if(object.getName().toLowerCase().contains(str.toLowerCase()))
             {
                 myList.add(object);
+                notFound.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            if(myList.size() == 0)
+            {
+                notFound.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+
             }
         }
         AdapterClass adapterClass = new AdapterClass(myList);

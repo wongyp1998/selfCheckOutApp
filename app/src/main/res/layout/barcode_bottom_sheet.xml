@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         app:custom_layout="@layout/number_picker_custom_layout"
         app:focusable="false"
-        app:max="10"
+        app:max="99"
         app:min="1"
         app:unit="1"
         app:value="-5" />

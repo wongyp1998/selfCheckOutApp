@@ -30,6 +30,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import tarc.edu.selfcheckoutapp.Model.Cart;
 import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 import tarc.edu.selfcheckoutapp.ViewHolder.ReviewViewHolder;
@@ -237,28 +243,112 @@ public class SummaryReviewActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }else {
 
-                    cartListRef.child("discount").addListenerForSingleValueEvent(new ValueEventListener() {
+                    cartListRef.child("Discount").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                             if (dataSnapshot.hasChild(inputCode)) {
-                                discountRate = dataSnapshot.child(inputCode).child("rate").getValue(String.class);
-                                Float discountValue = Float.parseFloat(discountRate) * 100;
-                                discountlayout.setVisibility(View.VISIBLE);
-                                txtDiscount.setText(String.format("%.0f", discountValue) + " %");
-                                discPriceLayout.setVisibility(View.VISIBLE);
-                                discountedPrice = TPrice * Float.parseFloat(discountRate);
-                                txtDiscPrice.setText("(-RM " + String.format("%.2f", discountedPrice) + ")");
-                                GrandTotal = TPrice - discountedPrice;
-                                txtGrandTotal.setText("RM " + String.format("%.2f", GrandTotal));
-                                newPrice = GrandTotal;
-                                txtTotal.setText(String.format("%.2f",newPrice));
-                                inputDiscount.setEnabled(false);
-                                btnApplyDiscount.setVisibility(View.GONE);
-                                btnCancel.setVisibility(View.VISIBLE);
-                                Toast.makeText(SummaryReviewActivity.this,
-                                        "Apply Successfully",
-                                        Toast.LENGTH_SHORT).show();
+
+                                if(dataSnapshot.child(inputCode).child("totalRedemption").getValue(Integer.class) != 0)
+                                {
+                                    Float minPurchase = dataSnapshot.child(inputCode).child("minPurchase").getValue(Float.class);
+                                    Float maxDsc = dataSnapshot.child(inputCode).child("maxDiscount").getValue(Float.class);
+                                    Integer limitPerUser = dataSnapshot.child(inputCode).child("LimitPerUser").getValue(Integer.class);
+                                    if(TPrice > minPurchase) {
+                                        Long expiry = dataSnapshot.child(inputCode).child("expiryDate").getValue(Long.class);
+                                        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                                        try {
+                                            Date date = (Date)formatter.parse("01-02-2020");
+                                            long output = date.getTime();
+
+                                            Calendar calForDate = Calendar.getInstance();
+                                            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
+                                            String saveCurrentDate = currentDate.format(calForDate.getTime());
+                                            Date cDate = (Date)formatter.parse(saveCurrentDate);
+                                            long output2 = cDate.getTime();
+//                                            String str2 = Long.toString(output2);
+//                                            long todayDate = Long.parseLong(str2)*1000;
+
+                                            if(output2 <= expiry)
+                                            {
+                                                discountRate = dataSnapshot.child(inputCode).child("rate").getValue(String.class);
+
+                                                cartListRef.child("Transaction").orderByChild("dscCode_phone").equalTo(inputCode+"_"+LoginPreferenceUtils.getPhone(SummaryReviewActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                                                        long usedFreq = dataSnapshot2.getChildrenCount();
+
+                                                        if(usedFreq<limitPerUser)
+                                                        {
+                                                            Float discountValue = Float.parseFloat(discountRate) * 100;
+                                                            discountlayout.setVisibility(View.VISIBLE);
+                                                            txtDiscount.setText(String.format("%.0f", discountValue) + " %");
+                                                            discPriceLayout.setVisibility(View.VISIBLE);
+                                                            discountedPrice = TPrice * Float.parseFloat(discountRate);
+
+
+                                                            if(discountedPrice>maxDsc)
+                                                            {
+                                                                discountedPrice = maxDsc;
+                                                            }
+
+                                                            txtDiscPrice.setText("(-RM " + String.format("%.2f", discountedPrice) + ")");
+                                                            GrandTotal = TPrice - discountedPrice;
+                                                            txtGrandTotal.setText("RM " + String.format("%.2f", GrandTotal));
+                                                            newPrice = GrandTotal;
+                                                            txtTotal.setText(String.format("%.2f", newPrice));
+                                                            inputDiscount.setEnabled(false);
+                                                            btnApplyDiscount.setVisibility(View.GONE);
+                                                            btnCancel.setVisibility(View.VISIBLE);
+                                                            Toast.makeText(SummaryReviewActivity.this,
+                                                                    String.valueOf(output),
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        else
+                                                        {
+                                                            Toast.makeText(SummaryReviewActivity.this,
+                                                                    "Redemption limit per user has been reached",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+
+
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(SummaryReviewActivity.this,
+                                                        "This voucher is expired",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+
+
+
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+                                    }
+                                    else {
+                                        Toast.makeText(SummaryReviewActivity.this,
+                                                "The minimum value for the voucher has not been reached",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                else
+                                {
+                                    Toast.makeText(SummaryReviewActivity.this,
+                                            "Redemption limit has been reached.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
+
                             } else {
                                 Toast.makeText(SummaryReviewActivity.this,
                                         "Invalid Code!",
@@ -269,6 +359,7 @@ public class SummaryReviewActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(SummaryReviewActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
 
                         }
                     });

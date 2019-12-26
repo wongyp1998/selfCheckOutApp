@@ -1,6 +1,6 @@
 package tarc.edu.selfcheckoutapp.Model;
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
 
     String tscID;
     String tscDate;
@@ -11,6 +11,12 @@ public class Transaction {
     Integer verifyStatus;
     String paymentMethod;
     String customerPhone;
+    Long timeStamp;
+
+    @Override
+    public int compareTo(Transaction compareTsc) {
+        return this.timeStamp.compareTo(compareTsc.timeStamp);
+    }
 
 
     public Transaction() {
@@ -87,4 +93,14 @@ public class Transaction {
     public void setCustomerPhone(String customerPhone) {
         this.customerPhone = customerPhone;
     }
+
+    public Long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+
 }

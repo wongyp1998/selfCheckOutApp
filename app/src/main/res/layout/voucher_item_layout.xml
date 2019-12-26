@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/transparent"
+    app:cardElevation="0dp"
+
+    >
+
+
+    <com.vipulasri.ticketview.TicketView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:id="@+id/ticketView"
+        app:ticketOrientation="vertical"
+        app:ticketScallopRadius="10dp"
+        app:ticketShowBorder="true"
+        app:ticketBorderColor="@color/red"
+        app:ticketBorderWidth="2dp"
+        app:ticketScallopPositionPercent="30"
+        app:ticketDividerColor="@color/lighter_grey"
+        app:ticketShowDivider="true"
+        app:ticketDividerType="dash"
+        app:ticketDividerPadding="0dp"
+        app:ticketElevation="10dp"
+        app:ticketCornerType="rounded"
+        app:ticketCornerRadius="10dp"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/voucher_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.31"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/voucher_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="35dp"
+                android:textSize="30sp"
+                android:textColor="@color/black"
+                android:text=""
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:text="off"
+                android:textStyle="bold">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.69"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_coupon"
+                android:layout_marginRight="15dp">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/voucher_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:text=""
+                android:textSize="16sp"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:text="Expires"
+                android:textSize="14sp"
+                android:textColor="@color/lighter_grey"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/voucher_expiryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

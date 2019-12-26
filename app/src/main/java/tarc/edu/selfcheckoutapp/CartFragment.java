@@ -1,5 +1,6 @@
 package tarc.edu.selfcheckoutapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -233,44 +235,62 @@ public class CartFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-            int position = viewHolder.getAdapterPosition();
-            Cart cart = adapter.getItem(position);
+
+            new AlertDialog.Builder(getActivity())
+                    .setMessage("Are you sure you want to delete this item?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            int position = viewHolder.getAdapterPosition();
+                            Cart cart = adapter.getItem(position);
 
 
-            if(position==0){
-                txtTotal.setText("0.00");
-                ((HomeActivity)getActivity()).itemCount = 0;
-                ((HomeActivity)getActivity()).showBadgeCount(0);
+                            if(position==0){
+                                txtTotal.setText("0.00");
+                                ((HomeActivity)getActivity()).itemCount = 0;
+                                ((HomeActivity)getActivity()).showBadgeCount(0);
 
-            }
-
-
+                            }
 
 
-            cartListRef.child("User View")
-                    .child(LoginPreferenceUtils.getPhone(getActivity()))
-                    .child("Products")
-                    .child(cart.getPid())
-                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
 
-                    if(task.isSuccessful()){
-                        Toast.makeText(getActivity(), "Item Removed Successfully",Toast.LENGTH_SHORT).show();
-                        getTotalPrice();
 
-                        if(adapter.getItemCount() == 0)
-                        {
-                            layout1.setVisibility(View.GONE);
-                            layout2.setVisibility(View.VISIBLE);
+                            cartListRef.child("User View")
+                                    .child(LoginPreferenceUtils.getPhone(getActivity()))
+                                    .child("Products")
+                                    .child(cart.getPid())
+                                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
 
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(getActivity(), "Item Removed Successfully",Toast.LENGTH_SHORT).show();
+                                        getTotalPrice();
+
+                                        if(adapter.getItemCount() == 0)
+                                        {
+                                            layout1.setVisibility(View.GONE);
+                                            layout2.setVisibility(View.VISIBLE);
+
+                                        }
+
+
+
+                                    }
+                                }
+                            });
                         }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                        }
+                    })
+                    .show();
 
 
 
-                    }
-                }
-            });
 
 
 

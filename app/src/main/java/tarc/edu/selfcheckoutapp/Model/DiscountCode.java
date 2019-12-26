@@ -1,23 +1,27 @@
 package tarc.edu.selfcheckoutapp.Model;
 
 public class DiscountCode {
-    String description;
+    String Desc;
     String rate;
+    Integer limit;
+    String Code;
 
     public DiscountCode() {
     }
 
-    public DiscountCode(String description, String rate) {
-        this.description = description;
+    public DiscountCode(String desc, String rate, Integer limit, String code) {
+        Desc = desc;
         this.rate = rate;
+        this.limit = limit;
+        Code = code;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return Desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        Desc = desc;
     }
 
     public String getRate() {
@@ -26,5 +30,21 @@ public class DiscountCode {
 
     public void setRate(String rate) {
         this.rate = rate;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public String getCode() {
+        return Code;
+    }
+
+    public void setCode(String code) {
+        Code = code;
     }
 }

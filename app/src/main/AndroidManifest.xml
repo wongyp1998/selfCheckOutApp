@@ -17,14 +17,17 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/app_logo"
-        android:label="fyp"
+        android:icon="@drawable/profile"
+        android:label="EzScan"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup,android:icon,android:label">
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".VoucherDetailsActivity"></activity>
+        <activity android:name=".ViewVoucherActivty" />
+        <activity android:name=".WalletHistoryActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".TransactionDetailsActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".PinVerificationActivity" />

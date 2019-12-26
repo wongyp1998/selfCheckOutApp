@@ -8,6 +8,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -45,10 +47,14 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import tarc.edu.selfcheckoutapp.Model.WalletTransaction;
 import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 
 public class WalletTopUpActivity extends AppCompatActivity {
@@ -60,15 +66,18 @@ public class WalletTopUpActivity extends AppCompatActivity {
     static final private String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     final private Random rng = new SecureRandom();
 
-    final DatabaseReference userdbRef = FirebaseDatabase.getInstance().getReference();
+    final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
-    String token,amount,topUpMethod;
+    String token,amount,topUpMethod,topUpTscID;
     HashMap<String,String> paramsHash;
     private EditText topUpEdt;
     private Button continueBtn,dialogCtnBtn;
-    private TextView topUpValue,errorMsg;
+//    String saveCurrentTime, saveCurrentDate;
+    private TextView topUpValue,errorMsg, txtWalletDateTime,txtWalletTopUpAmt;
     Dialog successfulDialog;
     private Map<String,String> date;
+    private ProgressDialog loadingBar;
+
 
 
 
@@ -83,6 +92,8 @@ public class WalletTopUpActivity extends AppCompatActivity {
         topUpValue = findViewById(R.id.topup_amt);
         errorMsg = findViewById(R.id.error);
         successfulDialog = new Dialog(this);
+        loadingBar = new ProgressDialog(this);
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.topup_toolbar);
@@ -205,7 +216,7 @@ public class WalletTopUpActivity extends AppCompatActivity {
                     paramsHash.put("amount",amount);
                     paramsHash.put("nonce",strNonce);
 
-
+                    startLoadingDialog();
                     sendPayment();
 
                 }
@@ -242,8 +253,8 @@ public class WalletTopUpActivity extends AppCompatActivity {
                 if(response.toString().contains("Successful")){
                     addTopUpActivityToDb();
                     updateBalance();
-                    Toast.makeText(WalletTopUpActivity.this, "Topped Up Successfully!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    loadingBar.dismiss();
+                    showPopup();
 
                 }
 
@@ -366,7 +377,7 @@ public class WalletTopUpActivity extends AppCompatActivity {
 
     private void updateBalance(){
 
-        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRef.child("User").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double balance = dataSnapshot.child("balance").getValue(Double.class);
@@ -388,7 +399,7 @@ public class WalletTopUpActivity extends AppCompatActivity {
 
     private void addTopUpActivityToDb(){
 
-        String topUpTscID = randomUUID(12,3,'-');
+        topUpTscID = randomUUID(12,3,'-');
         String topupAmt = amount;
         String status = "1";
         String desc = "Top Up";
@@ -397,6 +408,8 @@ public class WalletTopUpActivity extends AppCompatActivity {
 
         date = ServerValue.TIMESTAMP;
 
+
+
         TopUpMap.put("wTscDesc",desc);
         TopUpMap.put("wTscID",topUpTscID);
         TopUpMap.put("wTscDateTime",date);
@@ -404,8 +417,60 @@ public class WalletTopUpActivity extends AppCompatActivity {
         TopUpMap.put("wTscStatus",status);
         TopUpMap.put("wPaymentMethod",topUpMethod);
 
-        userdbRef.child("WalletTransaction").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).child(topUpTscID).updateChildren(TopUpMap);
+        dbRef.child("WalletTransaction").child(LoginPreferenceUtils.getPhone(WalletTopUpActivity.this)).child(topUpTscID).updateChildren(TopUpMap);
 
+
+
+    }
+
+    public void startLoadingDialog()
+    {
+        loadingBar.setTitle("Payment Transaction");
+        loadingBar.setMessage("Processing...");
+        loadingBar.setCanceledOnTouchOutside(false);
+        loadingBar.show();
+    }
+
+    public void showPopup(){
+        successfulDialog.setContentView(R.layout.topup_success_dialog);
+        txtWalletDateTime = (TextView)successfulDialog.findViewById(R.id.topup_date_time);
+        txtWalletTopUpAmt = (TextView)successfulDialog.findViewById(R.id.topup_amount);
+        dialogCtnBtn = (Button)successfulDialog.findViewById(R.id.dialog_continue);
+
+        dbRef.child("WalletTransaction").child(LoginPreferenceUtils.getPhone(this)).child(topUpTscID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                WalletTransaction tscWallet = dataSnapshot.getValue(WalletTransaction.class);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
+                String date = dateFormat.format(new Date(tscWallet.getwTscDateTime()));
+                txtWalletDateTime.setText(date);
+                Double amount = Double.parseDouble(tscWallet.getwTscAmount());
+                txtWalletTopUpAmt.setText("RM" + String.format("%.2f",amount));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+        dialogCtnBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+
+            }
+        });
+
+
+
+        successfulDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        successfulDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        successfulDialog.setCanceledOnTouchOutside(false);
+        successfulDialog.show();
 
 
     }

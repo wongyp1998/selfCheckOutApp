@@ -79,6 +79,7 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
   SpaceNavigationView navigationView;
   LinearLayout promoTag;
   final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+  final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
   private String pname;
   private String pbarcode;
   private String pprice;
@@ -184,7 +185,63 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
     addToCartButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        addingToCartList();
+        dbRef.child("Products").child(pbarcode).addListenerForSingleValueEvent(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Integer currentStock = dataSnapshot.child("CurrentStock").getValue(Integer.class);
+
+            if(Integer.parseInt(quantity)<= currentStock)
+            {
+              cartListRef.child("User View").child(LoginPreferenceUtils.getPhone(getActivity())).child("Products").child(pbarcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                  if (dataSnapshot.exists()) {
+                    String qtyInCart = dataSnapshot.child("quantity").getValue(String.class);
+                    Integer totalQty = Integer.parseInt(qtyInCart) + Integer.parseInt(quantity);
+
+                    if (totalQty <= currentStock) {
+                      addingToCartList();
+                      Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
+
+
+                    } else {
+                      Toast.makeText(getActivity(), "Sorry, we do not have enough stock", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                  }
+                  else {
+                    addingToCartList();
+                    Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_SHORT).show();
+
+
+
+                  }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                  Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+              });
+
+            }
+            else {
+              Toast.makeText(getActivity(), "Sorry, we do not have enough stock", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError databaseError) {
+            Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+          }
+        });
+
 
 
       }
@@ -285,6 +342,7 @@ public class BarcodeResultFragment extends BottomSheetDialogFragment implements 
 
               @Override
               public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
 
               }
             });

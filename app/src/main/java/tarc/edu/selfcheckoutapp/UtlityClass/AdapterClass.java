@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        Picasso.get().load(list.get(position).getImage()).into(holder.circleImageView);
+        Picasso.get().load(list.get(position).getImage()).fit().centerCrop().into(holder.circleImageView);
         holder.txtItemName.setText(list.get(position).getName());
         Double oldPrice = list.get(position).getPrice();
         holder.txtItemPrice.setText("RM"+String.format("%.2f",oldPrice));
@@ -83,6 +84,8 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.MyViewHolder
     public int getItemCount() {
         return list.size();
     }
+
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txtItemName, txtItemPrice,txtDscTag,txtItemNewPrice;

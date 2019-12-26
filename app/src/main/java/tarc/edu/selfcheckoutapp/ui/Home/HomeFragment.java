@@ -28,12 +28,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import tarc.edu.selfcheckoutapp.HomeActivity;
 import tarc.edu.selfcheckoutapp.LiveBarcodeScanningActivity;
+import tarc.edu.selfcheckoutapp.eWalletActivity;
+
 import tarc.edu.selfcheckoutapp.Model.SliderModel;
 import tarc.edu.selfcheckoutapp.R;
 import tarc.edu.selfcheckoutapp.Model.Product;
-import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 import tarc.edu.selfcheckoutapp.UtlityClass.SliderAdapter;
 import tarc.edu.selfcheckoutapp.ViewHolder.PromoViewHolder;
 
@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
     Double new_price = 0.0;
     private TextView welcomeTxt;
     private Button more_btn, scanNow_btn;
+    private ImageView wallet_btn;
 
     private ViewPager bannerSliderViewPager;
     private List<SliderModel> sliderModelList;
@@ -75,21 +76,22 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         dotsLayout = root.findViewById(R.id.dots_container);
         scanNow_btn = root.findViewById(R.id.home_scan_now);
-        welcomeTxt = root.findViewById(R.id.user_welcome);
+//        welcomeTxt = root.findViewById(R.id.user_welcome);
         more_btn = root.findViewById(R.id.see_all_btn);
+        wallet_btn = root.findViewById(R.id.toolbar_wallet_btn);
 
 
-        cartListRef.child("User").child(LoginPreferenceUtils.getPhone(getActivity())).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                welcomeTxt.setText("Hi, " + dataSnapshot.child("user_name").getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        cartListRef.child("User").child(LoginPreferenceUtils.getPhone(getActivity())).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                welcomeTxt.setText("Hi, " + dataSnapshot.child("user_name").getValue(String.class));
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         recyclerView = root.findViewById(R.id.promo_scroll_recycleview);
         recyclerView.setHasFixedSize(true);
@@ -114,6 +116,16 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), LiveBarcodeScanningActivity.class);
                 startActivity(i);
+            }
+        });
+
+        wallet_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(getActivity(), eWalletActivity.class);
+                startActivity(i);
+
             }
         });
 
@@ -280,7 +292,7 @@ public class HomeFragment extends Fragment {
             protected void onBindViewHolder(@NonNull PromoViewHolder holder, int position, @NonNull Product model) {
 
 
-                Picasso.get().load(model.getImage()).into(holder.circleImageView);
+                Picasso.get().load(model.getImage()).fit().centerCrop().into(holder.circleImageView);
                 holder.txtPromoDesc.setText(model.getName());
                 holder.txtOldPrice.setText("RM" + String.valueOf(model.getPrice()));
                 holder.txtOldPrice.setPaintFlags(holder.txtOldPrice.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);

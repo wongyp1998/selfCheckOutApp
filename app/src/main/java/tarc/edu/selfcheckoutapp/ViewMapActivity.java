@@ -50,7 +50,7 @@ public class ViewMapActivity extends AppCompatActivity {
         }
         mapView.loadMap(bitmap);
 
-        productRef.child("Products").child(productID).child("Location").addListenerForSingleValueEvent(new ValueEventListener() {
+        productRef.child("Products").child(productID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String zoneNo = dataSnapshot.child("Zone").getValue(String.class);
@@ -59,10 +59,10 @@ public class ViewMapActivity extends AppCompatActivity {
                 productRef.child("ShelfLocation").child("Zone_"+zoneNo).child("Shelf_"+shelfNo).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String x = dataSnapshot.child("x").getValue(String.class);
-                        String y = dataSnapshot.child("y").getValue(String.class);
+                        Integer x = dataSnapshot.child("x").getValue(Integer.class);
+                        Integer y = dataSnapshot.child("y").getValue(Integer.class);
 
-                        mapView.getController().sparkAtPoint(new PointF(Float.parseFloat(x),Float.parseFloat(y)), 20, R.color.red, 99);
+                        mapView.getController().sparkAtPoint(new PointF(x,y), 20, R.color.red, 99);
                     }
 
                     @Override

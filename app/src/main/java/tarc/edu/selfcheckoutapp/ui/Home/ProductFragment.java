@@ -50,14 +50,7 @@ public class ProductFragment extends Fragment {
         ImageView searchbtn = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchbtn.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-//        if(bundle!=null)
-//        {
-//
-//            tab_no = bundle.getInt("tab_no");
-////            currentTab = tab_no;
-//            TabLayout.Tab tab = tabLayout.getTabAt(tab_no);
-//            tab.select();
-//        }
+
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_basket);
 

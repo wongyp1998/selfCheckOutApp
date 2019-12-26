@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +25,7 @@ import tarc.edu.selfcheckoutapp.MainActivity;
 import tarc.edu.selfcheckoutapp.PinVerificationActivity;
 import tarc.edu.selfcheckoutapp.R;
 import tarc.edu.selfcheckoutapp.TransactionHistoryActivity;
+import tarc.edu.selfcheckoutapp.ViewVoucherActivty;
 import tarc.edu.selfcheckoutapp.eWalletActivity;
 
 public class ProfileFragment extends Fragment {
@@ -31,8 +34,10 @@ public class ProfileFragment extends Fragment {
     private Button wallet_btn;
     private Button security_btn;
     private Button signout_btn;
+    private Button voucher_btn;
     private TextView accName,accEmail,accHpNo;
     final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+    private FirebaseAuth mAuth;
 
 
     @Nullable
@@ -46,6 +51,8 @@ public class ProfileFragment extends Fragment {
         accEmail = root.findViewById(R.id.profile_email);
         accHpNo = root.findViewById(R.id.profile_hp);
         signout_btn = root.findViewById(R.id.signOut_btn);
+        voucher_btn = root.findViewById(R.id.voucher_btn);
+        mAuth = FirebaseAuth.getInstance();
 
         userRef.child("User").child(LoginPreferenceUtils.getPhone(getActivity())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,7 +105,18 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
 
                 LoginPreferenceUtils.clear(getActivity());
+                FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        voucher_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), ViewVoucherActivty.class);
                 startActivity(intent);
 
             }

@@ -1,13 +1,11 @@
 package tarc.edu.selfcheckoutapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,12 +16,8 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,86 +26,31 @@ import tarc.edu.selfcheckoutapp.Model.WalletTransaction;
 import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 import tarc.edu.selfcheckoutapp.ViewHolder.WalletActivityViewHolder;
 
-
-public class eWalletActivity extends AppCompatActivity {
+public class WalletHistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference();
     private FirebaseRecyclerAdapter<WalletTransaction, WalletActivityViewHolder> adapter;
-    private Button topup_btn, viewAllBtn;
-    private TextView balancetxt;
-    final DatabaseReference userdbRef = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_e_wallet);
+        setContentView(R.layout.activity_wallet_history);
 
-        recyclerView  = findViewById(R.id.wallet_activity_recycleview);
+        recyclerView  = findViewById(R.id.wallet_history_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.wallet_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.wallet_history_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("My Wallet");
+        getSupportActionBar().setTitle("Wallet Transaction");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        topup_btn = findViewById(R.id.btn_topup);
-        balancetxt = findViewById(R.id.blc_amount);
-        viewAllBtn = findViewById(R.id.more_history);
-
-        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                showBalance();
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                showBalance();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-        topup_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(eWalletActivity.this, WalletTopUpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        viewAllBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(eWalletActivity.this, WalletHistoryActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -123,14 +62,13 @@ public class eWalletActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
 
         FirebaseRecyclerOptions<WalletTransaction> options = new FirebaseRecyclerOptions.Builder<WalletTransaction>()
                 .setQuery(cartListRef.child("WalletTransaction")
-                        .child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).orderByChild("wTscDateTime").limitToLast(4),WalletTransaction.class)
+                        .child(LoginPreferenceUtils.getPhone(WalletHistoryActivity.this)).orderByChild("wTscDateTime"),WalletTransaction.class)
                 .build();
 
         adapter = new FirebaseRecyclerAdapter<WalletTransaction, WalletActivityViewHolder>(options) {
@@ -174,22 +112,5 @@ public class eWalletActivity extends AppCompatActivity {
         adapter.startListening();
 
 
-    }
-
-
-
-    private void showBalance(){
-        userdbRef.child("User").child(LoginPreferenceUtils.getPhone(eWalletActivity.this)).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Double balance = dataSnapshot.child("balance").getValue(Double.class);
-                balancetxt.setText(String.format("%.2f",balance));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 }

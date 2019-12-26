@@ -20,6 +20,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Collections;
+
 import tarc.edu.selfcheckoutapp.Model.Transaction;
 import tarc.edu.selfcheckoutapp.UtlityClass.LoginPreferenceUtils;
 import tarc.edu.selfcheckoutapp.ViewHolder.TransactionViewHolder;
@@ -27,7 +29,7 @@ import tarc.edu.selfcheckoutapp.ViewHolder.TransactionViewHolder;
 public class TransactionHistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference();
     private FirebaseRecyclerAdapter<Transaction, TransactionViewHolder> adapter;
 
@@ -39,7 +41,11 @@ public class TransactionHistoryActivity extends AppCompatActivity {
         recyclerView  = findViewById(R.id.tsc_history_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tsc_toolbar);
         setSupportActionBar(toolbar);
@@ -93,6 +99,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
 
                 }
+
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
