@@ -287,6 +287,7 @@ public class CartFragment extends Fragment {
                             adapter.notifyItemChanged(viewHolder.getAdapterPosition());
                         }
                     })
+                    .setCancelable(false)
                     .show();
 
 

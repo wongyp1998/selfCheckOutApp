@@ -86,7 +86,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 if(currentStock == 0)
                 {
                     txtPStatus.setText("Out of Stock");
-//                    txtPStatus.setBackgroundColor(Color.parseColor("#00cc00"));
                     drawable.setColor(Color.parseColor("#FF0000"));
 
 
@@ -94,13 +93,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 }else if(currentStock>0 && currentStock<=50)
                 {
                     txtPStatus.setText("Low Stock");
-//                    txtPStatus.setBackgroundColor(Color.parseColor("#FFA500"));
                     drawable.setColor(Color.parseColor("#FF8C00"));
 
                 }else
                 {
                     txtPStatus.setText("In Stock");
-//                    txtPStatus.setBackgroundColor(Color.parseColor("#00FF00"));
                     drawable.setColor(Color.parseColor("#00e500"));
 
 

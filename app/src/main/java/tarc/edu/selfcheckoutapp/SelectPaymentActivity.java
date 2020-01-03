@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,7 +99,6 @@ public class SelectPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_payment);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.gateway_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Select Payment Method");
@@ -143,8 +144,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 cardView1.toggle();
                 cardView2.setChecked(false);
-//                btnPay.setBackgroundTintList(getResources().getColorStateList(R.color.red));
-//                btnPay.setEnabled(true);
+
             }
         });
 
@@ -153,8 +153,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 cardView2.toggle();
                 cardView1.setChecked(false);
-//                btnPay.setBackgroundTintList(getResources().getColorStateList(R.color.red));
-//                btnPay.setEnabled(true);
+
             }
         });
 
@@ -442,6 +441,7 @@ public class SelectPaymentActivity extends AppCompatActivity {
                     loadingBar.dismiss();
                     showPopup();
                 }else{
+                    loadingBar.dismiss();
                     errorMsg.setText("Insufficient wallet balance for transaction.");
                     errorMsg.setVisibility(View.VISIBLE);
 

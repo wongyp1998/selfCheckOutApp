@@ -72,7 +72,6 @@ public class WalletTopUpActivity extends AppCompatActivity {
     HashMap<String,String> paramsHash;
     private EditText topUpEdt;
     private Button continueBtn,dialogCtnBtn;
-//    String saveCurrentTime, saveCurrentDate;
     private TextView topUpValue,errorMsg, txtWalletDateTime,txtWalletTopUpAmt;
     Dialog successfulDialog;
     private Map<String,String> date;
